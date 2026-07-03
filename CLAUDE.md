@@ -248,6 +248,23 @@ Da du primär für M365/Azure/Windows entwickelst:
 - PR-Flow durchlaufen (Solo: Self-Merge OK, kein Required-Approval — siehe GitHub Ruleset in Abschnitt 3)
 - No Conflicts
 
+### Risikobasierte Merge-Policy (Solo-Maintainer)
+
+Da PR-Pflicht technisch erzwungen ist (Abschnitt 3), aber kein zweiter Reviewer existiert, gilt für die Merge-Entscheidung selbst diese Eskalationsregel — unabhängig davon, auf welcher Maschine oder in welcher Session gearbeitet wird:
+
+**Niedriges Risiko → selbst mergen, danach kurz informieren:**
+- Tests, Dokumentation (README, CHANGELOG, ADRs)
+- CI/CD-Konfiguration
+- Dependency-Updates mit grünen Checks
+
+**Mittleres/hohes Risiko → PR erstellen, Diff zeigen, auf explizites OK warten:**
+- Business-Logik
+- Security-relevante Änderungen
+- Secrets/Auth/Permissions
+- Breaking Changes
+
+Diese Regel gilt auch für Änderungen an dieser CLAUDE.md selbst sowie am `ruleset-template.json`.
+
 ---
 
 ## 8. DOCUMENTATION
