@@ -88,7 +88,23 @@ Diese Richtlinien gelten für alle Projekte, insbesondere für öffentliche Port
 - **Branch Protection:** 
   - No Direct Push to Main (erzwingen!)
   - No Force Push to Main (ever!)
-  - Code Review vor Merge (mindestens 1 Approval)
+  - PR-Pflicht vor Merge (Solo-Maintainer: kein Required-Approval nötig, aber PR-Flow ist Pflicht)
+
+### GitHub Ruleset (technisch erzwungen, nicht nur Richtlinie)
+
+Jedes Public Repo bekommt bei Erstellung das Ruleset `solo-main-protection` auf dem Default-Branch:
+- `deletion` — Branch-Löschung blockiert
+- `non_fast_forward` — Force-Push blockiert
+- `pull_request` — PR vor Merge erforderlich, `required_approving_review_count: 0` (Solo-Workflow, kein Self-Approval-Deadlock)
+- Kein `bypass_actor` gesetzt → gilt auch für den Owner selbst
+
+**Setup für neue Repos:**
+```bash
+gh api repos/<owner>/<repo>/rulesets -X POST --input ruleset.json
+```
+Ruleset-Template liegt in diesem Repo: `ruleset-template.json`
+
+**Monatlicher Auto-Check:** Prüft, ob alle Public Repos dieses Ruleset aktiv haben (`gh api repos/<owner>/<repo>/rulesets`). Fehlt es, wird es im Audit-PR nachgetragen.
 
 ### Semantic Versioning (MAJOR.MINOR.PATCH)
 - **MAJOR:** Breaking Changes (z.B. API Breaking Change)
@@ -229,7 +245,7 @@ Da du primär für M365/Azure/Windows entwickelst:
 - Tests passing
 - Security Review OK
 - Code Style OK
-- At least 1 Approval (wenn mit Team, sonst selbst OK geben)
+- PR-Flow durchlaufen (Solo: Self-Merge OK, kein Required-Approval — siehe GitHub Ruleset in Abschnitt 3)
 - No Conflicts
 
 ---
