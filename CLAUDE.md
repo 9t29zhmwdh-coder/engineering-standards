@@ -389,7 +389,24 @@ Diese CLAUDE.md ist **lebendig** und wird monatlich automatisch geprüft auf:
 
 ---
 
-**Version:** 2026-07-03  
+## 12. AI-TRANSPARENZ & POSITIONIERUNG
+
+**Grundsatz:** Rafael positioniert sich als moderner AI-nativer Engineer. KI-Einsatz wird nicht versteckt, sondern durch sichtbare Governance untermauert (dieses Standards-Repo, Rulesets, PR-Flow, CI, Tests).
+
+### Erlaubt und gewollt
+- `Co-Authored-By: Claude ...`-Trailer in Commits
+- Der "claude"-Account in GitHub-Contributors
+- "AI | Claude Code"-Badges in READMEs (bestehender Badge-Standard)
+
+### Weiterhin verbindlich
+- Qualitätsverantwortung liegt sichtbar beim Menschen: Merge-Entscheidungen, Reviews und Standards trägt Rafael
+- README-Footer nennt Rafael als Author (Standard-Footer)
+- Kein KI-Marketing in PR-Bodies oder READMEs ("Generated with ..."-Werbelinks): Transparenz ja, Werbung nein
+- Kein History-Rewrite zur nachträglichen Bereinigung von KI-Referenzen (No-Force-Push-Regel aus Abschnitt 3 gilt)
+
+---
+
+**Version:** 2026-07-05  
 **Last Auto-Check:** Nie (wird monatlich geprüft)  
 **Gültig für:** Alle Portfolio-Projekte unter C:\Users\RafaelYilmaz, besonders für GitHub Public Repos  
 **Microsoft Focus:** M365, Azure, Windows (x86/ARM)
