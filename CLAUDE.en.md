@@ -391,7 +391,24 @@ This CLAUDE.md is **living** and is automatically checked monthly for:
 
 ---
 
-**Version:** 2026-07-03
+## 12. AI TRANSPARENCY & POSITIONING
+
+**Principle:** Rafael positions himself as a modern AI-native engineer. AI usage is not hidden but backed by visible governance (this standards repo, rulesets, PR flow, CI, tests).
+
+### Allowed and intended
+- `Co-Authored-By: Claude ...` trailers in commits
+- The "claude" account in GitHub contributors
+- "AI | Claude Code" badges in READMEs (existing badge standard)
+
+### Still binding
+- Quality ownership visibly stays with the human: merge decisions, reviews and standards are Rafael's
+- README footer names Rafael as author (standard footer)
+- No AI marketing in PR bodies or READMEs ("Generated with ..." promo links): transparency yes, advertising no
+- No history rewrite to retroactively scrub AI references (the no-force-push rule from section 3 applies)
+
+---
+
+**Version:** 2026-07-05
 **Last auto-check:** Never (checked monthly)
 **Applies to:** All portfolio projects, especially GitHub public repos
 **Microsoft focus:** M365, Azure, Windows (x86/ARM)
