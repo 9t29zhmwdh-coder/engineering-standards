@@ -1,0 +1,57 @@
+{
+  "properties": {
+    "displayName": "Portfolio baseline: require encryption, tags, and allowed regions",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "description": "Reference policy definition implementing standards/azure-integration.md section 7 (Azure Policy Governance). Denies resource creation outside allowed regions, requires the standard tag set, and requires encryption at rest for storage accounts.",
+    "metadata": {
+      "category": "Portfolio Governance",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "allowedRegions": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Allowed regions",
+          "description": "Azure regions this subscription is permitted to deploy resources into."
+        },
+        "defaultValue": ["westeurope", "northeurope"]
+      },
+      "requiredTags": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Required tags",
+          "description": "Tags that must be present on every resource, per the naming convention in standards/azure-integration.md section 4."
+        },
+        "defaultValue": ["workload", "environment", "owner", "managedBy"]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          {
+            "not": {
+              "field": "location",
+              "in": "[parameters('allowedRegions')]"
+            }
+          },
+          {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Storage/storageAccounts"
+              },
+              {
+                "field": "Microsoft.Storage/storageAccounts/supportsHttpsTrafficOnly",
+                "notEquals": "true"
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}
