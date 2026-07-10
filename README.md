@@ -1,6 +1,6 @@
 <div align="center"><img src="RayStudio.png" alt="RayStudio Logo" width="120"/><h1>engineering-standards</h1></div>
 
-> 🇩🇪 [Deutsche Version](README.de.md)
+🇩🇪 [Deutsche Version](README.de.md)
 
 **The single versioned source of truth for how software is designed, secured, built, and released across the RayStudio portfolio.** Microsoft-focused, security-first, written for senior engineers and architects.
 
