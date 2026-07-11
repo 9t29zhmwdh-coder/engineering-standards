@@ -116,4 +116,4 @@ gh api repos/<owner>/<repo>/rulesets -X POST --input ruleset-template.json
 
 ---
 
-**Autor:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Active
+**Autor:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Active · **Lizenz:** [CC BY 4.0](LICENSE)
