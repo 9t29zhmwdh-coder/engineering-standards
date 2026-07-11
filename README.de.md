@@ -43,7 +43,7 @@ Es ist normativ, nicht ambitioniert formuliert: Jede Regel hier ist entweder tec
 
 ## Architektur-Philosophie
 
-Systeme in diesem Portfolio werden standardmäßig cloud-nativ und resilient gebaut: zustandslose Prozesse, externalisierte Konfiguration und explizite Resilience-Patterns (Timeouts, Retries mit Backoff, Circuit Breaking, Graceful Degradation) an jeder Dependency-Grenze. Komplexität wird nur hinzugefügt, wenn eine konkrete Anforderung sie verlangt, und strukturelle Entscheidungen mit langfristigen Folgen werden als [Architecture Decision Record](templates/architecture-decision-record.md) festgehalten, nicht stillschweigend getroffen. Details in [`standards/architecture.md`](standards/architecture.md).
+Systeme in diesem Portfolio werden standardmässig cloud-nativ und resilient gebaut: zustandslose Prozesse, externalisierte Konfiguration und explizite Resilience-Patterns (Timeouts, Retries mit Backoff, Circuit Breaking, Graceful Degradation) an jeder Dependency-Grenze. Komplexität wird nur hinzugefügt, wenn eine konkrete Anforderung sie verlangt, und strukturelle Entscheidungen mit langfristigen Folgen werden als [Architecture Decision Record](templates/architecture-decision-record.md) festgehalten, nicht stillschweigend getroffen. Details in [`standards/architecture.md`](standards/architecture.md).
 
 ## Security-First-Modell
 
