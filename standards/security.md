@@ -44,38 +44,46 @@ Threat models are revisited whenever a new trust boundary, external integration,
 - Local development uses `.env` files that are `.gitignore`d, paired with a committed `.env.example` documenting the required keys without values.
 - Secret scanning (GitHub secret scanning / push protection, or an equivalent pre-commit hook) is enabled on every repository.
 
-## 6. Input Validation and Sanitization
+## 6. Personal and Third-Party Information
+
+- No repository, public or private, contains real names, hostnames, IP addresses, or other identifying details of a third party (employer, client, colleague) unless that party has explicitly agreed to the reference. This is treated as equal in priority to secrets management (Section 5), not a lesser concern.
+- Metadata fields that commonly carry this unnoticed, such as `Company`/`Publisher`/`Author` in `.csproj`, `Info.plist`, `package.json`, or Cargo `authors`, and installer scripts, are checked before the first publish of a repository and on every subsequent release.
+- A tool originally built in the context of employment is reviewed for IP ownership before it is published as a personal project. Where ownership is unclear, the employer's moonlighting or IP policy governs, not this document; when in doubt, do not publish until clarified.
+- Example configuration, screenshots, and demo data use synthetic values. Real internal hostnames, real customer names, or real production data never appear in committed files, even in a private repository.
+- This applies retroactively: an existing repository found to contain such a reference (e.g. carried over from an initial commit or a copied template) is corrected as soon as discovered, with the fix treated as a normal patch release, not scheduled for "later".
+
+## 7. Input Validation and Sanitization
 
 - Validate at every trust boundary: user input, API payloads, file uploads, and data read back from a database that another process could have written.
 - Whitelist expected shapes and values rather than attempting to blacklist known-bad patterns.
 - Use parameterized queries or an ORM's parameter binding for all database access; string-concatenated queries are not acceptable in any language.
 - Encode output for the context it is rendered into (HTML, URL, shell argument) to prevent injection classes beyond SQL (XSS, command injection, path traversal).
 
-## 7. Encryption
+## 8. Encryption
 
 - **In transit:** TLS everywhere, including internal service-to-service traffic where the platform supports it cheaply (mutual TLS via a service mesh, or platform-managed TLS for PaaS-to-PaaS traffic).
 - **At rest:** Platform-managed encryption at minimum (Azure Storage Service Encryption, transparent data encryption for databases); customer-managed keys in Key Vault for data classified as confidential or restricted.
 - **Passwords:** Never stored in a recoverable form. Use a modern, salted, adaptive hash (Argon2id preferred, PBKDF2 or bcrypt acceptable) with parameters reviewed against current OWASP guidance.
 
-## 8. Secure Error Handling
+## 9. Secure Error Handling
 
 - Clients receive generic, non-identifying error messages and a correlation ID; stack traces, SQL fragments, and internal paths never reach a client response.
 - The corresponding detailed error, including stack trace and context, is logged internally and retrievable via the correlation ID.
 
-## 9. Dependency Governance and SBOM
+## 10. Dependency Governance and SBOM
 
 - Every release generates a Software Bill of Materials in CycloneDX format (see [`../examples/`](../examples/) for pipeline integration); this is a CI gate, not an optional step.
 - Dependency vulnerability scanning (`npm audit`, `cargo audit`, `pip-audit`, `dotnet list package --vulnerable`, GitHub Dependabot alerts) runs on every pull request and on a scheduled cadence against `main`.
 - Lock files (`package-lock.json`, `Cargo.lock`, `requirements.txt`/`poetry.lock`) are committed and are the source of truth for reproducible builds.
 - A vulnerability with an available fix is patched within a risk-proportional window: critical within days, high within two weeks, medium/low on the next regular dependency update cycle.
 
-## 10. Audit Logging
+## 11. Audit Logging
 
 - Every sensitive operation (authentication attempt, permission change, data export, secret access) is logged with who, what, when, and from where.
 - Audit logs are append-only from the application's perspective; write access to modify or delete historical audit entries is not granted to application identities.
 - Failed authentication attempts are tracked and trigger lockout/backoff after a defined threshold, with alerting on anomalous patterns (velocity, geography, impossible travel where identity telemetry is available).
 
-## 11. Release Gate
+## 12. Release Gate
 
 No release ships without:
 
@@ -83,4 +91,5 @@ No release ships without:
 - [ ] A clean dependency audit (or explicitly accepted, time-boxed exceptions with a stated reason)
 - [ ] A generated SBOM attached to the release
 - [ ] Secret scanning clean on the release commit
+- [ ] No personal or third-party identifying information (Section 6) in code, metadata, or documentation
 - [ ] The applicable items in [`../templates/security-checklist.md`](../templates/security-checklist.md) checked off

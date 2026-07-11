@@ -47,6 +47,12 @@ These guidelines apply to all projects, especially public portfolio tools on Git
   - Azure Key Vault for production secrets
   - Environment variables for development (with .env.example, never commit .env)
 
+- ✅ **Personal & Third-Party Information** (top priority, since 2026-07-11)
+  - No repository (public or private) contains real names, hostnames, IP addresses, or other identifying details of a third party (employer, client, colleague), unless that party has explicitly agreed to the reference
+  - Metadata fields that commonly carry this unnoticed (`Company`/`Publisher`/`Author` in `.csproj`, `Info.plist`, `package.json`, Cargo `authors`, installer scripts) are checked before first publish and on every release
+  - A tool originally built in the context of employment is reviewed for IP ownership before being published as a personal project; when in doubt, the employer's moonlighting/IP policy governs, not this document
+  - Example configuration, screenshots, and demo data use synthetic values, never real internal hostnames, real customer names, or real production data
+
 - ✅ **Intrusion Detection & Audit Logging**
   - Rate limiting (login, API endpoints)
   - Failed login tracking & lockout
@@ -72,6 +78,7 @@ These guidelines apply to all projects, especially public portfolio tools on Git
 - [ ] MFA implemented?
 - [ ] All user inputs validated?
 - [ ] No secrets in code?
+- [ ] No employer/client references in code, metadata, or docs?
 - [ ] Audit logging in place?
 - [ ] Error messages safe (no leaks)?
 - [ ] Dependencies up to date & audited?
