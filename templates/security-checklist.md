@@ -1,6 +1,6 @@
 # Security Checklist
 
-Per-release checklist implementing [`standards/security.md`](../standards/security.md) section 11. Copy this into a release PR or issue and check off each applicable item before tagging a release. Items that do not apply to a given tool (for example, MFA for a CLI tool with no user accounts) are marked N/A with a one-line reason, not silently omitted.
+Per-release checklist implementing [`standards/security.md`](../standards/security.md) section 12. Copy this into a release PR or issue and check off each applicable item before tagging a release. Items that do not apply to a given tool (for example, MFA for a CLI tool with no user accounts) are marked N/A with a one-line reason, not silently omitted.
 
 ## Threat Modeling
 
@@ -26,6 +26,12 @@ Per-release checklist implementing [`standards/security.md`](../standards/securi
 - [ ] Secret scanning clean on the release commit
 - [ ] `.env.example` updated if new configuration keys were introduced
 - [ ] Any new production secret is in Key Vault (or the project's equivalent secret store), not in a config file or CI variable where avoidable
+
+## Personal and Third-Party Information
+
+- [ ] No real employer, client, or colleague name, hostname, or IP address anywhere in the diff, including metadata fields (`Company`/`Publisher`/`Author` in `.csproj`, `Info.plist`, `package.json`, Cargo `authors`, installer scripts)
+- [ ] Any example configuration, screenshot, or demo data added this release uses synthetic values, not real internal or production data
+- [ ] If this tool originated in the context of employment, IP ownership has been clarified before this release
 
 ## Encryption
 
