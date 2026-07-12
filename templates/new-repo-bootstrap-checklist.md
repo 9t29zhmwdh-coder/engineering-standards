@@ -51,6 +51,11 @@ place.
       placeholder filled in and every claim verified true against this
       repository's actual state (not copy-pasted aspirationally — see that
       template's usage note)
+- [ ] Private vulnerability reporting enabled
+      (`gh api -X PUT repos/<owner>/<repo>/private-vulnerability-reporting`):
+      without this, the "GitHub Security Advisory" link in `SECURITY.md`
+      does not actually accept a private report, which defeats the point
+      of pointing away from public issues in the first place
 - [ ] `solo-main-protection` ruleset applied to the default branch via
       `gh api repos/<owner>/<repo>/rulesets` **at creation**, not deferred
       until after the first release (`governance.md`, `ci-cd.md` section 7)
@@ -73,9 +78,16 @@ place.
       installer (Tauri bundler, PyInstaller, Inno Setup, `dotnet publish`);
       confirmed to actually attach build artifacts to a real tag push
       before relying on it (see Phase 4)
-- [ ] CodeQL default setup enabled in the repository's Security settings
-      (`ci-cd.md` section 9)
-- [ ] OpenSSF Scorecard workflow added (`ci-cd.md` section 9); badge added
+- [ ] Pure repo-settings toggles enabled, no workflow file needed for
+      these three (`ci-cd.md` section 9): CodeQL default setup
+      (`gh api -X PATCH repos/<owner>/<repo>/code-scanning/default-setup
+      -f state=configured -f query_suite=default`); Dependabot security
+      updates (`security_and_analysis.dependabot_security_updates.status`
+      via `gh api -X PATCH repos/<owner>/<repo>`); secret scanning and push
+      protection (usually on by default for public repos, verify with
+      `gh api repos/<owner>/<repo> --jq .security_and_analysis` anyway)
+- [ ] OpenSSF Scorecard workflow added (`ci-cd.md` section 9) — this one
+      does need a workflow file, unlike the toggles above; badge added
       to `README.md` once the first scan has run
 - [ ] Build provenance attestation added to the release job if this
       repository ships a packaged installer (`ci-cd.md` section 9),

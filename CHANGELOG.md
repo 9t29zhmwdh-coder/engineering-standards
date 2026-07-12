@@ -3,6 +3,13 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.5.1] - 2026-07-12
+
+### Added
+
+- `templates/new-repo-bootstrap-checklist.md` and `standards/ci-cd.md` section 9 now explicitly call out private vulnerability reporting and Dependabot security updates as pure repo-settings toggles (no workflow file, `gh api` only), alongside the already-documented CodeQL default setup. Discovered while enabling these across the portfolio: private vulnerability reporting was off everywhere, which meant the "report via GitHub Security Advisory" instruction in every repo's SECURITY.md did not actually work.
+- Noted that `secret_scanning_non_provider_patterns` and `secret_scanning_validity_checks` require a paid GitHub Advanced Security license, unavailable on an individual Pro plan; documented as out of reach rather than silently omitted.
+
 ## [0.5.0] - 2026-07-12
 
 ### Added

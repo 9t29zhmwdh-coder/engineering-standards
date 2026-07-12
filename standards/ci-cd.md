@@ -72,17 +72,40 @@ steps:
 
 ## 9. Automated Security Signals
 
-Beyond the dependency audit already required in Section 3, three free,
-GitHub/Microsoft-backed signals catch classes of problem a manual audit
-misses or forgets to re-check on every change:
+Beyond the dependency audit already required in Section 3, several free,
+GitHub/Microsoft-native signals catch classes of problem a manual audit
+misses or forgets to re-check on every change. The first three below are
+pure repository-settings toggles, enabled via the GitHub API with no
+workflow file and no third-party app install; the next two need an actual
+workflow file:
 
+- **Private vulnerability reporting**: enabled via
+  `gh api -X PUT repos/<owner>/<repo>/private-vulnerability-reporting`.
+  Without this, the "report via GitHub Security Advisory" instruction in
+  `SECURITY.md` (from `templates/security-policy-template.md`) does not
+  actually accept a submission — verify it is on, do not assume it defaults
+  to on.
+- **Dependabot security updates**: enabled via
+  `security_and_analysis.dependabot_security_updates.status` in a
+  `gh api -X PATCH repos/<owner>/<repo>` call. Distinct from the
+  version-update `dependabot.yml` config in Section 2, which opens routine
+  bump PRs; this toggle specifically reacts to disclosed vulnerabilities.
+- **Secret scanning and push protection**: on by default for public
+  repositories, but verify with
+  `gh api repos/<owner>/<repo> --jq .security_and_analysis` rather than
+  assume, the same way every other claim in this document is verified, not
+  asserted. Two further sub-features
+  (`secret_scanning_non_provider_patterns`, `secret_scanning_validity_checks`)
+  require a paid GitHub Advanced Security license and are out of reach on
+  an individual Pro plan; do not claim them as enabled without checking.
 - **CodeQL** (GitHub's static analysis security scanner, Microsoft-backed
-  research): enabled via the repository's Security settings ("Default
-  setup") for every supported language. Finds real code-level
-  vulnerabilities (injection, unsafe deserialization, path traversal) that
-  a dependency audit does not, because a dependency audit only checks
-  known-vulnerable *packages*, not vulnerable code written in this
-  repository.
+  research): enabled via
+  `gh api -X PATCH repos/<owner>/<repo>/code-scanning/default-setup
+  -f state=configured -f query_suite=default` for every supported
+  language. Finds real code-level vulnerabilities (injection, unsafe
+  deserialization, path traversal) that a dependency audit does not,
+  because a dependency audit only checks known-vulnerable *packages*, not
+  vulnerable code written in this repository.
 - **OpenSSF Scorecard**: a scheduled workflow (`ossf/scorecard-action`)
   that scores the repository against supply-chain hygiene checks,
   including the exact thing Section 2 requires by hand (pinned actions),
