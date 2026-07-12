@@ -1,4 +1,4 @@
-# Claude Code Guidelines — Senior Software Engineer Standards
+# Claude Code Guidelines: Senior Software Engineer Standards
 **Portfolio Edition** | Microsoft-fokussiert | Security-First | Public Code Quality
 
 Diese Richtlinien gelten für alle Projekte, insbesondere für öffentliche Portfolio-Tools auf GitHub.
@@ -8,19 +8,19 @@ Diese Richtlinien gelten für alle Projekte, insbesondere für öffentliche Port
 ## 1. SENIOR ENGINEER CORE BEHAVIOR
 
 ### Niemals
-- **Dateien kommentarlos löschen** — Wenn eine Datei gelöscht werden soll, begründe es zuerst und frage nach (es sei denn, es ist offensichtlich überflüssig wie temp-files)
-- **Grosse Refactorings ohne Plan durchführen** — Vor grösseren Umstrukturierungen wird zuerst ein Plan erstellt, der die Auswirkungen klärt
-- **Änderungen ohne Diff präsentieren** — Vor dem Commit wird der Diff immer gezeigt und erklärt
-- **Secrets in Code committen** — Nie. Passwords, API Keys, Tokens gehören in Secret Manager (Azure Key Vault, 1Password)
+- **Dateien kommentarlos löschen**: Wenn eine Datei gelöscht werden soll, begründe es zuerst und frage nach (es sei denn, es ist offensichtlich überflüssig wie temp-files)
+- **Grosse Refactorings ohne Plan durchführen**: Vor grösseren Umstrukturierungen wird zuerst ein Plan erstellt, der die Auswirkungen klärt
+- **Änderungen ohne Diff präsentieren**: Vor dem Commit wird der Diff immer gezeigt und erklärt
+- **Secrets in Code committen**: Nie. Passwords, API Keys, Tokens gehören in Secret Manager (Azure Key Vault, 1Password)
 
 ### Immer
-- **Plan erstellen** — Bei nicht-trivialen Änderungen (>1 Datei oder komplexe Logik)
-- **Auswirkungen analysieren** — Betroffene Dateien, Dependencies, Seiteneffekte
-- **Git-Diff kontrollieren** — Vor dem Commit zeigen und erklären
-- **Tests ausführen** — Falls Tests existieren, vor Commit laufen lassen
-- **Zusammenfassung liefern** — Was, Warum, Nebenwirkungen
-- **Atomic Commits** — Ein Commit = eine logische Änderung
-- **Semantic Commit Messages** — `type(scope): description` (feat, fix, security, refactor, test, docs)
+- **Plan erstellen**: Bei nicht-trivialen Änderungen (>1 Datei oder komplexe Logik)
+- **Auswirkungen analysieren**: Betroffene Dateien, Dependencies, Seiteneffekte
+- **Git-Diff kontrollieren**: Vor dem Commit zeigen und erklären
+- **Tests ausführen**: Falls Tests existieren, vor Commit laufen lassen
+- **Zusammenfassung liefern**: Was, Warum, Nebenwirkungen
+- **Atomic Commits**: Ein Commit = eine logische Änderung
+- **Semantic Commit Messages**: `type(scope): description` (feat, fix, security, refactor, test, docs)
 
 ---
 
@@ -28,9 +28,9 @@ Diese Richtlinien gelten für alle Projekte, insbesondere für öffentliche Port
 
 **Dies ist der grösste Unterschied zu Standard-Code.** Für öffentliche Portfolio-Tools MUSS Security von Tag 1 eingebaut sein.
 
-### Security Features — Vor der ersten Zeile Code
+### Security Features: Vor der ersten Zeile Code
 - ✅ **Authentication & Authorization**
-  - MFA (Multi-Factor Authentication) — nicht optional, ab Tag 1
+  - MFA (Multi-Factor Authentication): nicht optional, ab Tag 1
   - RBAC oder ABAC (Role/Attribute-Based Access Control)
   - Least Privilege Principle
   - Session Management mit Timeout & Rotation
@@ -100,9 +100,9 @@ Diese Richtlinien gelten für alle Projekte, insbesondere für öffentliche Port
 ### GitHub Ruleset (technisch erzwungen, nicht nur Richtlinie)
 
 Jedes Public Repo bekommt bei Erstellung das Ruleset `solo-main-protection` auf dem Default-Branch:
-- `deletion` — Branch-Löschung blockiert
-- `non_fast_forward` — Force-Push blockiert
-- `pull_request` — PR vor Merge erforderlich, `required_approving_review_count: 0` (Solo-Workflow, kein Self-Approval-Deadlock)
+- `deletion`: Branch-Löschung blockiert
+- `non_fast_forward`: Force-Push blockiert
+- `pull_request`: PR vor Merge erforderlich, `required_approving_review_count: 0` (Solo-Workflow, kein Self-Approval-Deadlock)
 - Kein `bypass_actor` gesetzt → gilt auch für den Owner selbst
 
 **Setup für neue Repos:**
@@ -193,7 +193,7 @@ npm run build     # oder python setup.py build
 - Wenn >300 Zeilen Klasse → split in mehrere
 
 ### Comments
-- **Nur WHY, nicht WHAT** — `x++` ist klar, aber warum es hier wichtig ist, erklären
+- **Nur WHY, nicht WHAT**: `x++` ist klar, aber warum es hier wichtig ist, erklären
 - Keine Self-Evident Comments (`// increment x`)
 - Inline-Docs für Tricky Logic
 
@@ -252,12 +252,12 @@ Da du primär für M365/Azure/Windows entwickelst:
 - Tests passing
 - Security Review OK
 - Code Style OK
-- PR-Flow durchlaufen (Solo: Self-Merge OK, kein Required-Approval — siehe GitHub Ruleset in Abschnitt 3)
+- PR-Flow durchlaufen (Solo: Self-Merge OK, kein Required-Approval, siehe GitHub Ruleset in Abschnitt 3)
 - No Conflicts
 
 ### Risikobasierte Merge-Policy (Solo-Maintainer)
 
-Da PR-Pflicht technisch erzwungen ist (Abschnitt 3), aber kein zweiter Reviewer existiert, gilt für die Merge-Entscheidung selbst diese Eskalationsregel — unabhängig davon, auf welcher Maschine oder in welcher Session gearbeitet wird:
+Da PR-Pflicht technisch erzwungen ist (Abschnitt 3), aber kein zweiter Reviewer existiert, gilt für die Merge-Entscheidung selbst diese Eskalationsregel, unabhängig davon, auf welcher Maschine oder in welcher Session gearbeitet wird:
 
 **Niedriges Risiko → selbst mergen, danach kurz informieren:**
 - Tests, Dokumentation (README, CHANGELOG, ADRs)
