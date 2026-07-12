@@ -45,6 +45,12 @@ Diese Richtlinien gelten für alle Projekte, insbesondere für öffentliche Port
   - Azure Key Vault für Production Secrets
   - Environment Variables für Development (mit .env.example, niemals .env committen)
 
+- ✅ **Persönliche & Drittanbieter-Informationen** (oberste Priorität, seit 2026-07-11)
+  - Kein Repo (öffentlich oder privat) enthält reale Namen, Hostnamen, IP-Adressen oder andere identifizierende Angaben eines Dritten (Arbeitgeber, Kunde, Kollege), ausser dieser Dritte hat der Nennung ausdrücklich zugestimmt
+  - Metadatenfelder, die das häufig unbemerkt tragen (`Company`/`Publisher`/`Author` in `.csproj`, `Info.plist`, `package.json`, Cargo `authors`, Installer-Skripten) werden vor der Erstveröffentlichung und bei jedem Release geprüft
+  - Ein Tool, das im Rahmen einer Anstellung entstanden ist, wird vor Veröffentlichung als persönliches Projekt auf die IP-Rechte-Frage geprüft; im Zweifel gilt die Nebentätigkeits-/IP-Policy des Arbeitgebers, nicht dieses Dokument
+  - Beispiel-Configs, Screenshots und Demo-Daten verwenden synthetische Werte, nie reale interne Hostnamen, echte Kundennamen oder echte Produktionsdaten
+
 - ✅ **Intrusion Detection & Audit Logging**
   - Rate Limiting (Login, API Endpoints)
   - Failed Login Tracking & Lockout
@@ -70,6 +76,7 @@ Diese Richtlinien gelten für alle Projekte, insbesondere für öffentliche Port
 - [ ] MFA implementiert?
 - [ ] Alle User Inputs validiert?
 - [ ] Secrets nicht in Code?
+- [ ] Keine Arbeitgeber-/Kunden-Referenzen in Code, Metadaten oder Doku?
 - [ ] Audit Logging vorhanden?
 - [ ] Error Messages sicher (keine Leaks)?
 - [ ] Dependencies aktuell & geprüft?

@@ -48,3 +48,10 @@ Any decision with long-term structural consequences, a new data store, a cross-c
 
 - An exception to any standard in this repository (a repo that cannot practically meet a given bar, for example a WPF app with no cross-platform CI runner available) is documented in that repository's own `README.md` or `ROADMAP.md`, stating what the exception is and why, rather than silently deviating.
 - Security exceptions specifically (an accepted vulnerability, a deferred audit finding) are time-boxed: they carry a review date, not an open-ended acceptance.
+
+## 8. Dual-Licensing and Enterprise Feature Development
+
+- Repositories assessed as Dual-Licensing candidates (Community MIT plus a Commercial/Enterprise tier) keep their existing MIT-licensed code exactly as it is. An MIT release, once published, cannot be retroactively restricted; this is a legal fact about how MIT works, not a policy choice.
+- Because of that, any newly developed feature that is enterprise-shaped (multi-tenant or multi-site aggregation, credentialed fleet enrichment, SIEM/compliance export, a centralized dashboard aggregating many local instances, and similar) is developed privately (a private branch or a separate private repository) rather than committed to the repository's public, MIT-licensed main branch, until that repository's actual Community/Commercial split is implemented.
+- This rule is not retroactive: it does not apply to features already released under MIT, only to new work going forward, starting from the date a repository is identified as a Dual-Licensing candidate (see that repository's own `ROADMAP.md`, "Dual-Licensing Readiness" section).
+- The portfolio's public "open source, MIT" positioning is unchanged by this rule: the eventual Community edition of a Dual-Licensing repository remains genuinely MIT and genuinely open. This rule only governs which new features get built where, before a repository's Commercial edition exists.
