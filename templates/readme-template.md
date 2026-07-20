@@ -9,7 +9,8 @@
 
 {{Optional second paragraph, expanding on the problem this solves.}}
 
-[![CI](https://github.com/{{owner}}/{{repo}}/actions/workflows/ci.yml/badge.svg)](https://github.com/{{owner}}/{{repo}}/actions) ![Platform](https://img.shields.io/badge/Platform-{{platforms}}-lightgrey) {{additional badges: language, framework, AI tooling used}}
+[![CI](https://github.com/{{owner}}/{{repo}}/actions/workflows/ci.yml/badge.svg)](https://github.com/{{owner}}/{{repo}}/actions) [![CodeQL](https://github.com/{{owner}}/{{repo}}/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/{{owner}}/{{repo}}/security/code-scanning) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/{{owner}}/{{repo}}/badge)](https://securityscorecards.dev/viewer/?uri=github.com/{{owner}}/{{repo}}) {{if registered: OpenSSF Best Practices badge}}
+![Platform](https://img.shields.io/badge/Platform-{{platforms}}-lightgrey) {{additional badges: language, framework, AI tooling used}}
 
 > **How it runs:** {{One sentence: native desktop app with no background service, or a local server at http://localhost:PORT, or a CLI tool, etc. Be explicit about what a user should expect after installing it.}}
 

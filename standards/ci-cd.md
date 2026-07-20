@@ -128,6 +128,23 @@ additional, low-effort signals layered on top, enabled once at repository
 creation (Phase 2 of
 [`../templates/new-repo-bootstrap-checklist.md`](../templates/new-repo-bootstrap-checklist.md)).
 
+### README badge order
+
+The badge row is two lines, not one, so the security signals stay
+scannable instead of buried among platform/tech badges:
+
+- **Line 1, in this order:** CI, CodeQL, OpenSSF Scorecard, OpenSSF Best
+  Practices (once a repo is registered on
+  bestpractices.coreinfrastructure.org). This is the "does it work, is it
+  scanned, is it hygienic" row, ordered from most to least fundamental.
+- **Line 2:** everything else (Platform, language/framework, AI tooling
+  badges).
+
+Never let a single badge end up alone on its own line: markdown treats a
+lone image link on its own line as visually isolated (reads as
+disconnected rather than part of the row). Add new badges to line 1 or
+line 2 as appropriate, never as a standalone third line.
+
 ## 10. Minimal Reference Matrix
 
 | Stage | Windows | Ubuntu | macOS (if applicable) |
