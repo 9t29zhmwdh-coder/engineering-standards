@@ -113,6 +113,7 @@ gh api repos/<owner>/<repo>/rulesets -X POST --input ruleset-template.json
 | 2026-07-05 | Englische Übersetzung der Standards ergänzt; bilinguale READMEs |
 | 2026-07-05 | KI-Transparenz- und Positionierungs-Policy ergänzt (`CLAUDE.md`, Abschnitt 12) |
 | 2026-07-08 | Erweitert zu einer vollständigen Enterprise-Standards-Library: `standards/`, `examples/`, `templates/`-Verzeichnisse zu Architecture, Security, Azure-Integration, CI/CD, Observability, Governance sowie Rust/TypeScript/Python-Coding-Standards |
+| 2026-07-21 | `required_status_checks` von Einzel-Repo-Pilot auf portfolio-weite Baseline gehoben (v0.5.3): GitHub blockiert jetzt technisch einen Merge bei rotem Check auf jedem Public Repo, nicht nur die PR-Pflicht |
 
 ---
 
