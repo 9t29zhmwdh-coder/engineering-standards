@@ -3,6 +3,13 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.5.3] - 2026-07-21
+
+### Added
+
+- `required_status_checks` promoted from a `WorkplaceAssessment`-only pilot to the portfolio-wide baseline: every public repository's `solo-main-protection` ruleset now technically blocks a merge with a failing check, not just the PR requirement. `ruleset-template.json` gets a minimal universal entry (`Analyze (actions)`) as the default for new repos; existing repos each have their own stack-specific required contexts applied directly via the API.
+- `standards/ci-cd.md` section 7 documents a known caveat found during the rollout: the generic `CodeQL` check name reports `skipping` instead of `success` on some repos (observed on `SwiftAgent`, `NetSweep`, `CodeWhisper`), so it is deliberately left out of the required set there to avoid a required check that can never turn green.
+
 ## [0.5.2] - 2026-07-12
 
 ### Fixed
