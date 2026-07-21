@@ -65,6 +65,12 @@ steps:
 - CI must be green on the PR's head commit before merge; a merge that bypasses a failing required check is not permitted by the ruleset and is not manually worked around.
 - See [`governance.md`](governance.md) for the risk-based merge policy that governs *who* clicks merge, as distinct from the *technical* gate described here.
 
+### Status: `required_status_checks` is not yet in the template
+
+The line above ("not permitted by the ruleset") describes the intended end state, not the current baseline: `ruleset-template.json` at the repository root does **not** currently include a `required_status_checks` rule, so as applied by the template today, GitHub does not technically block a merge with a failing check, only the PR requirement itself is enforced. That gap has so far been covered by discipline (verifying green CI manually before every merge), not by the ruleset.
+
+As of 2026-07-21, `required_status_checks` (contexts: `Analyze (actions)`, `CodeQL`, `Syntax, Lint & Smoke Test`, `strict_required_status_checks_policy: false`) has been added directly to the **`WorkplaceAssessment`** repository's ruleset as a pilot, applied via the API to that one repository, not by changing this template. `ruleset-template.json` is intentionally left unchanged for now, so new repositories keep getting the current baseline until this is reviewed. Pending review: whether to promote this into `ruleset-template.json` (making it the default for every repository going forward, per the adoption policy in [`governance.md`](governance.md) section 3) or keep it a per-repository opt-in.
+
 ## 8. Caching and Performance
 
 - Dependency caches (`actions/cache`, `Swatinem/rust-cache`, npm/pip caches) are used on every pipeline to keep CI feedback fast; a slow CI pipeline is treated as a productivity defect worth fixing.

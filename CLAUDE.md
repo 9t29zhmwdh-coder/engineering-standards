@@ -113,6 +113,8 @@ Ruleset-Template liegt in diesem Repo: `ruleset-template.json`
 
 **Monatlicher Auto-Check:** Prüft, ob alle Public Repos dieses Ruleset aktiv haben (`gh api repos/<owner>/<repo>/rulesets`). Fehlt es, wird es im Audit-PR nachgetragen.
 
+**Pilot, noch nicht im Template (Stand 2026-07-21):** `required_status_checks` (CI muss grün sein, bevor GitHub den Merge überhaupt zulässt) ist bislang nur auf `WorkplaceAssessment` direkt gesetzt, nicht in `ruleset-template.json` übernommen. Details und offene Entscheidung (Template-weit übernehmen oder Einzelfall lassen) siehe `standards/ci-cd.md` Abschnitt 7.
+
 ### Semantic Versioning (MAJOR.MINOR.PATCH)
 - **MAJOR:** Breaking Changes (z.B. API Breaking Change)
 - **MINOR:** New Features (backward compatible)
