@@ -28,60 +28,14 @@ Diese Richtlinien gelten für alle Projekte, insbesondere für öffentliche Port
 
 **Dies ist der grösste Unterschied zu Standard-Code.** Für öffentliche Portfolio-Tools MUSS Security von Tag 1 eingebaut sein.
 
-### Security Features: Vor der ersten Zeile Code
-- ✅ **Authentication & Authorization**
-  - MFA (Multi-Factor Authentication): nicht optional, ab Tag 1
-  - RBAC oder ABAC (Role/Attribute-Based Access Control)
-  - Least Privilege Principle
-  - Session Management mit Timeout & Rotation
+### Security-Standard: kanonische Quelle
 
-- ✅ **Input Validation & Sanitization**
-  - Whitelist > Blacklist
-  - Validate at Boundaries (User Input, APIs, DB)
-  - Never Trust Untrusted Input
+Der vollständige, verbindliche Security-Standard lebt in diesem Repo unter `standards/security.md`, nicht als separate Liste hier dupliziert, um Drift zwischen zwei Kopien zu vermeiden:
 
-- ✅ **Secrets Management**
-  - Keine hardcoded Passwords/Keys in Code
-  - Azure Key Vault für Production Secrets
-  - Environment Variables für Development (mit .env.example, niemals .env committen)
+- `standards/security.md` — 12 Abschnitte: STRIDE-Threat-Modeling, Zero Trust Principles, Secure Defaults, Identity & Access (Entra ID, MFA, RBAC/ABAC, Managed Identity), Secrets Management, Persönliche & Drittanbieter-Informationen (oberste Priorität, seit 2026-07-11), Input Validation & Sanitization, Encryption, Secure Error Handling, Dependency Governance & SBOM (CycloneDX), Audit Logging, Release Gate
+- `templates/security-checklist.md` — die abzuhakende Checkliste pro Release, inklusive Sign-off (Reviewer, Datum, Version)
 
-- ✅ **Persönliche & Drittanbieter-Informationen** (oberste Priorität, seit 2026-07-11)
-  - Kein Repo (öffentlich oder privat) enthält reale Namen, Hostnamen, IP-Adressen oder andere identifizierende Angaben eines Dritten (Arbeitgeber, Kunde, Kollege), ausser dieser Dritte hat der Nennung ausdrücklich zugestimmt
-  - Metadatenfelder, die das häufig unbemerkt tragen (`Company`/`Publisher`/`Author` in `.csproj`, `Info.plist`, `package.json`, Cargo `authors`, Installer-Skripten) werden vor der Erstveröffentlichung und bei jedem Release geprüft
-  - Ein Tool, das im Rahmen einer Anstellung entstanden ist, wird vor Veröffentlichung als persönliches Projekt auf die IP-Rechte-Frage geprüft; im Zweifel gilt die Nebentätigkeits-/IP-Policy des Arbeitgebers, nicht dieses Dokument
-  - Beispiel-Configs, Screenshots und Demo-Daten verwenden synthetische Werte, nie reale interne Hostnamen, echte Kundennamen oder echte Produktionsdaten
-
-- ✅ **Intrusion Detection & Audit Logging**
-  - Rate Limiting (Login, API Endpoints)
-  - Failed Login Tracking & Lockout
-  - Audit Logs für sensitive Operations (Who, What, When, Why)
-  - Anomaly Detection (Unusual Access Patterns)
-
-- ✅ **Encryption**
-  - TLS/HTTPS in Transit (Standard)
-  - AES-256 für sensitive Data at Rest
-  - Use Industry-Standard Algorithms (SHA-256, PBKDF2 für Passwords)
-
-- ✅ **Secure Error Handling**
-  - Keine Stack Traces in Client Responses
-  - Keine DB Errors zu Users leaken
-  - Generic Error Messages zu Clients, Detailed Logs Internally
-
-- ✅ **Dependency Security**
-  - npm audit, pip check, dotnet outdated vor jedem Release
-  - Lock Files (package-lock.json, requirements.txt)
-  - Kein Arbitrary Upgrades in Production
-
-### Security Checklist (vor jedem Release)
-- [ ] MFA implementiert?
-- [ ] Alle User Inputs validiert?
-- [ ] Secrets nicht in Code?
-- [ ] Keine Arbeitgeber-/Kunden-Referenzen in Code, Metadaten oder Doku?
-- [ ] Audit Logging vorhanden?
-- [ ] Error Messages sicher (keine Leaks)?
-- [ ] Dependencies aktuell & geprüft?
-- [ ] OWASP Top 10 gecheckt? (Injection, Auth, Sensitive Data, XML, Broken Auth, etc.)
-- [ ] Penetration Test durchgeführt? (zumindest manual Security Review)
+Vor jedem Release: `templates/security-checklist.md` kopieren und abarbeiten, nicht aus dem Gedächtnis rekonstruieren.
 
 ---
 
