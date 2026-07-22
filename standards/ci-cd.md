@@ -138,20 +138,32 @@ creation (Phase 2 of
 
 ### README badge order
 
-The badge row is two lines, not one, so the security signals stay
-scannable instead of buried among platform/tech badges:
+The badge row is three lines, not one, grouped by what each badge actually
+certifies, so the certification signals stay scannable instead of buried
+among platform/tech badges:
 
-- **Line 1, in this order:** CI, CodeQL, OpenSSF Scorecard, OpenSSF Best
+- **Line 1, "Certs.":** CI, CodeQL, OpenSSF Scorecard, OpenSSF Best
   Practices (once a repo is registered on
   bestpractices.coreinfrastructure.org). This is the "does it work, is it
   scanned, is it hygienic" row, ordered from most to least fundamental.
-- **Line 2:** everything else (Platform, language/framework, AI tooling
-  badges).
+  Every future professionalism/compliance badge (a new scanner, a new
+  certification signal) is added here, not to Line 2 or 3.
+- **Line 2, "Tech.":** Microsoft/Apple badge (if applicable), Platform,
+  language/framework badges, AI-tooling badges. The stack, not a
+  certification.
+- **Line 3, "Div.", only if the repo actually has one of these:** the
+  dynamic GitHub Release badge, and anything else that fits neither Line 1
+  nor Line 2. Do not add this line for a repo that has nothing to put in
+  it. No separate License badge belongs here or anywhere, GitHub already
+  surfaces MIT via the repo's own "license" tab (unchanged rule); if an
+  existing repo still carries one, that is a standing violation to clean
+  up, not a reason to add it back.
 
-Never let a single badge end up alone on its own line: markdown treats a
-lone image link on its own line as visually isolated (reads as
-disconnected rather than part of the row). Add new badges to line 1 or
-line 2 as appropriate, never as a standalone third line.
+Never let a single badge end up alone on its own line by itself when a
+line otherwise would have had more than one: markdown treats a lone image
+link on its own line as visually isolated (reads as disconnected rather
+than part of a row). Add new badges to whichever of the three lines
+matches what they certify, never as an ad-hoc fourth line.
 
 ## 10. Minimal Reference Matrix
 
