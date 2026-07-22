@@ -266,6 +266,8 @@ Since PR requirement is technically enforced (section 3) but no second reviewer 
 - CI/CD configuration
 - Dependency updates with green checks
 
+Even for these low-risk cases: do not merge immediately after diff review. Wait for `gh pr checks` to show CI and Dependabot green first, then merge. Diff review alone does not catch build failures, formatting checks, or security-scan hits that CI surfaces. If the repo has no CI workflows at all (pure documentation repos), this wait naturally does not apply.
+
 **Medium/high risk: create PR, show diff, wait for explicit OK:**
 - Business logic
 - Security-relevant changes

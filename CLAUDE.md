@@ -220,6 +220,8 @@ Da PR-Pflicht technisch erzwungen ist (Abschnitt 3), aber kein zweiter Reviewer 
 - CI/CD-Konfiguration
 - Dependency-Updates mit grünen Checks
 
+Auch bei diesen Low-Risk-Fällen: nicht sofort nach dem Diff-Review mergen. Erst `gh pr checks` abwarten, bis CI und Dependabot grün stehen, dann mergen. Diff-Review allein findet keine Build-Fehler, Formatierungs-Checks oder Security-Scan-Treffer, die CI aufdeckt. Hat das Repo gar keine CI-Workflows (reine Dokumentations-Repos), entfällt das Warten naturgemäss.
+
 **Mittleres/hohes Risiko → PR erstellen, Diff zeigen, auf explizites OK warten:**
 - Business-Logik
 - Security-relevante Änderungen
