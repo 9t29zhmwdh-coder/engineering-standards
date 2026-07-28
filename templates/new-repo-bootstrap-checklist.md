@@ -65,6 +65,10 @@ place.
 - [ ] CI workflow adapted from `examples/ci-pipeline-example.yml`
 - [ ] Every action pinned to a commit SHA from the first commit
       (`ci-cd.md` section 2), there is no "pin it later" grace period
+- [ ] Every lint, format, build and audit tool the job installs pinned to
+      an exact version, not an open range (`ci-cd.md` section 2, "Tooling
+      inside the job"). An open range on a formatter turns CI red without
+      a commit as soon as upstream changes what counts as formatted
 - [ ] Lint, build, and test stages present, even if tests are currently
       minimal; a zero-test repository is a tracked `ROADMAP.md` gap, not a
       silently skipped CI stage

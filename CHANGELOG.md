@@ -3,6 +3,17 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.7.0] - 2026-07-28
+
+### Added
+
+- `standards/ci-cd.md` section 2 gains "Tooling inside the job": linters, formatters, build and audit tools are pinned to an exact version, not an open range. Section 2 covered `uses:` lines only, so nothing stopped `AdapterForge` from declaring `ruff>=0.6`, picking up 0.16.0 at run time and going red on unchanged source because that release reordered imports. The same workflow already pinned `build` and `pip-audit` exactly, which is why the outlier went unnoticed.
+- `templates/new-repo-bootstrap-checklist.md` phase 2 gains the matching checklist item.
+
+### Changed
+
+- Section 2 is now titled "Pinning (Supply Chain Integrity)" instead of "Action Pinning", with actions and job tooling as sub-sections. The section number is unchanged, so existing cross-references still resolve.
+
 ## [0.6.0] - 2026-07-28
 
 ### Added
