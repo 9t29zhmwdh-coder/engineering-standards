@@ -15,7 +15,22 @@ Baseline for every GitHub Actions pipeline across the portfolio. See [`../exampl
 - Pin with a trailing comment noting the human-readable version for maintainability: `uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0`.
 - This applies to first-party (`actions/*`) and third-party actions alike; there is no exception for "well-known" publishers.
 - Dependabot (or Renovate) is configured with `github-actions` ecosystem updates enabled, so pinned SHAs are bumped via a normal, reviewable PR on a schedule rather than silently freezing a repository on a stale or later-disclosed-vulnerable action version.
-- Check the version comment on every dependency PR. Dependabot updates the SHA and leaves the comment untouched, so a major bump lands as `actions/checkout@<new sha> # v6` while the pin actually resolves to v7. The comment is the only human-readable version signal in the file, and a wrong one is worse than none. Verify the SHA belongs to the claimed tag with `gh api repos/<owner>/<action>/git/refs/tags --jq '.[] | select(.object.sha=="<sha>") | .ref'`.
+- Check the version comment on every dependency PR. Dependabot updates the SHA and leaves the comment untouched, so a major bump lands as `actions/checkout@<new sha> # v6` while the pin actually resolves to v7. The comment is the only human-readable version signal in the file, and a wrong one is worse than none. Verify the SHA belongs to the claimed tag by resolving the tag to its
+  commit and comparing that against the pin:
+
+  ```bash
+  gh api repos/<owner>/<action>/commits/<tag> --jq '.sha'
+  ```
+
+  Resolve tag to commit, not commit to tag. Searching
+  `git/refs/tags` for the SHA fails in two ways at once: that listing is
+  paginated, so an action with many tags simply does not contain the entry
+  on the first page, and for an annotated tag the `object.sha` is the tag
+  object rather than the commit it points at, so the comparison finds
+  nothing even when the pin is correct. Both were hit on
+  `github/codeql-action` and `ossf/scorecard-action`, whose tags are
+  annotated. The `commits/<tag>` endpoint dereferences either kind and
+  returns the commit directly.
 - Pin every occurrence of the same action to the same SHA. Separate workflow files drift apart when one of them is updated by a PR that does not touch the others, which leaves a repository claiming one version while running two.
 
 ### Tooling inside the job
