@@ -15,7 +15,7 @@ It is normative, not aspirational: every rule here is either technically enforce
 - [`CLAUDE.md`](CLAUDE.md) is the operative instruction set: linked as global Claude Code instructions on every development machine, so an AI pair-programmer follows the exact same rules everywhere. [`CLAUDE.en.md`](CLAUDE.en.md) is its English reference translation.
 - [`standards/`](standards/) is the detailed technical reference this README summarizes: architecture, security, Azure integration, CI/CD, observability, governance, and per-language coding standards.
 - [`examples/`](examples/) contains complete, working reference implementations: a CI pipeline, an Azure Policy definition, and a worked STRIDE threat model.
-- [`templates/`](templates/) contains the copy-paste starting points used across the portfolio: a README template, an Architecture Decision Record template, a per-release security checklist, and a pre-publish checklist for new tools.
+- [`templates/`](templates/) contains the copy-paste starting points used across the portfolio: a README template, an Architecture Decision Record template, a per-release security checklist, a pre-publish checklist for new tools, and a Dependabot configuration.
 - [`ruleset-template.json`](ruleset-template.json) is the GitHub ruleset (`solo-main-protection`) applied to every public repository's default branch.
 
 ## Microsoft-Style Principles

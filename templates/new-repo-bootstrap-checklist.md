@@ -75,8 +75,10 @@ place.
 - [ ] Security-audit job (`cargo audit`/`npm audit`/`pip-audit`/
       `dotnet list package --vulnerable`) present and green **before the
       first PR merges**, not added reactively after a scan finds something
-- [ ] Dependabot enabled for the `github-actions` ecosystem and the
-      project's package ecosystem, so SHA pins and dependencies get
+- [ ] `.github/dependabot.yml` committed from `templates/dependabot.yml`,
+      covering the `github-actions` ecosystem and the project's package
+      ecosystem. Enabling alerts in the repository settings does not create
+      version updates; without the file there are none. So SHA pins and dependencies get
       reviewable bump PRs instead of silently aging
 - [ ] Release workflow present if this repository ships a packaged
       installer (Tauri bundler, PyInstaller, Inno Setup, `dotnet publish`);

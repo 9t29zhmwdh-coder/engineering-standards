@@ -3,6 +3,21 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.10.0] - 2026-07-28
+
+### Added
+
+- `templates/dependabot.yml`: the configuration to copy into every repository, with grouped updates so one PR per ecosystem per week arrives instead of one per dependency.
+
+### Changed
+
+- `standards/ci-cd.md` section 2 now states that the Dependabot rule requires a committed `.github/dependabot.yml`, and that repository-level security alerts are not a substitute. Alerts only fire for disclosed vulnerabilities, so a repository can have them enabled, look configured, and still never receive a version update.
+- `templates/new-repo-bootstrap-checklist.md` phase 2 asks for the file, not for a setting.
+
+### Note
+
+- A portfolio scan on 2026-07-28 found the file missing in 31 of 36 repositories. The consequence is visible in the `actions/checkout` pins, which are spread across v4, v6, v7.0.0 and v7.0.1; the three current ones are the repositories touched by hand today. Rollout follows in stages.
+
 ## [0.9.0] - 2026-07-28
 
 ### Added

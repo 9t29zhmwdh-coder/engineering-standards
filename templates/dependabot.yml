@@ -1,0 +1,34 @@
+# Dependabot version updates. Copy to .github/dependabot.yml in every repository
+# and keep only the ecosystems that repository actually uses.
+#
+# Without this file there are no version updates at all. Security alerts stay on
+# regardless, but they only fire for disclosed vulnerabilities, so pinned action
+# SHAs quietly rot in place. See standards/ci-cd.md section 2.
+#
+# Grouping keeps the PR count sane: one PR per ecosystem per week rather than one
+# per dependency. Review the version comment next to each SHA on every PR;
+# Dependabot updates the SHA and leaves the comment on the old major.
+version: 2
+updates:
+  # Always present. This is what keeps pinned action SHAs current.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(ci)"
+    groups:
+      actions:
+        patterns: ["*"]
+
+  # Keep the entry matching this repository's stack, delete the rest.
+  # pip (Python), npm (Node/TypeScript), cargo (Rust), nuget (.NET), swift, gomod
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      python:
+        patterns: ["*"]
