@@ -3,6 +3,26 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.8.0] - 2026-07-28
+
+### Added
+
+- `standards/release-process.md`: ruleset setup for new repositories, versioning discipline, semantic versioning taken literally including what "finished" means for a major release, the release steps, the pre-release checklist and the rollback procedure.
+- `standards/documentation.md`: README structure, API documentation, ADR, CHANGELOG format and the bilingual/first-person language conventions.
+- `standards/microsoft-stack.md`: Graph API authentication, Azure deployment, Windows and ARM targeting, package management. Azure resource design stays in `azure-integration.md`; the new file cross-references it rather than duplicating it.
+- `templates/portfolio-publish-checklist.md`: the pre-publish gate for a new tool, distinct from the per-release and security gates.
+- All four are listed in both READMEs, so they are reachable without knowing they exist.
+
+### Changed
+
+- `CLAUDE.md` no longer carries the long-form content of sections 3, 6, 8, 9 and 10 and points at the files above instead. This commits a change that had been sitting uncommitted in the working tree: since `~/.claude/CLAUDE.md` is a symlink to this file, the shortened version was already in force in every session while the repository still showed the long one.
+- The shortened version previously referenced Claude Code skills by name (`portfolio-release`, `portfolio-docs`, `microsoft-stack-guidelines`, `portfolio-publish-checklist`). Those live outside this repository, so a reader of this public repo, or any session on a machine without them, had no way to follow the reference. All pointers now resolve to versioned files here.
+- `CLAUDE.en.md` follows the same structure again. It had kept the full long form, including a second copy of the security rules that section 2 has referenced out to `standards/security.md` for a while.
+
+### Fixed
+
+- Removed the last two em-dashes in the repository, both in `CLAUDE.md` section 2.
+
 ## [0.7.1] - 2026-07-28
 
 ### Fixed
