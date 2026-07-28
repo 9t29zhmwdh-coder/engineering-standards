@@ -37,6 +37,7 @@ Es ist normativ, nicht ambitioniert formuliert: Jede Regel hier ist entweder tec
 | [`standards/ci-cd.md`](standards/ci-cd.md) | Runner-Matrix, Pflicht-Pipeline-Stages, OIDC-Federation, SBOM-Generierung, Release-Automation |
 | [`standards/release-process.md`](standards/release-process.md) | Ruleset-Setup, Versionierungsdisziplin, Release-Schritte, Pre-Release-Checkliste, Rollback |
 | [`standards/documentation.md`](standards/documentation.md) | README-Struktur, API-Docs, ADR, CHANGELOG-Format, Sprachkonventionen |
+| [`standards/writing-style.md`](standards/writing-style.md) | Gedankenstrich-Regel, Schweizer Rechtschreibung, DE/EN-Komposita, Ich-Form in Solo-Maintainer-Dokumenten |
 | [`standards/microsoft-stack.md`](standards/microsoft-stack.md) | Graph-API-Auth, Azure-Deployment, Windows/ARM-Targeting, Package-Management |
 | [`standards/observability.md`](standards/observability.md) | Strukturiertes Logging, Correlation, RED/USE-Metriken, Dashboards, Alerting |
 | [`standards/governance.md`](standards/governance.md) | Ownership-Modell, risikobasierte Merge-Policy, Policy-Lifecycle, Living Standards, ADRs |

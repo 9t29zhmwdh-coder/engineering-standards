@@ -3,6 +3,16 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.9.0] - 2026-07-28
+
+### Added
+
+- `standards/writing-style.md`: the dash rule with its rationale and the grep that checks it, Swiss orthography, German/English compound rules, first person in solo-maintainer documents, and the bilingual document rule. These constraints have governed every text in this portfolio for a while and have repeatedly caused rework, but they existed only in a locally installed Claude Code skill and were never published, so the repository enforced rules it did not state. Linked from both READMEs.
+
+### Note
+
+- The `writing-style-check` skill now points at this file as its canonical source, in the same way the other skills were realigned in 0.8.0. Its own description used a hyphen as a dash, which the rule it enforces forbids; that is fixed.
+
 ## [0.8.0] - 2026-07-28
 
 ### Added
