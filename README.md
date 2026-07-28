@@ -37,6 +37,7 @@ It is normative, not aspirational: every rule here is either technically enforce
 | [`standards/ci-cd.md`](standards/ci-cd.md) | Runner matrix, required pipeline stages, OIDC federation, SBOM generation, release automation |
 | [`standards/release-process.md`](standards/release-process.md) | Ruleset setup, versioning discipline, release steps, pre-release checklist, rollback |
 | [`standards/documentation.md`](standards/documentation.md) | README structure, API docs, ADR, CHANGELOG format, language conventions |
+| [`standards/writing-style.md`](standards/writing-style.md) | Dash rule, Swiss orthography, German/English compounds, first person in solo-maintainer documents |
 | [`standards/microsoft-stack.md`](standards/microsoft-stack.md) | Graph API auth, Azure deployment, Windows/ARM targeting, package management |
 | [`standards/observability.md`](standards/observability.md) | Structured logging, correlation, RED/USE metrics, dashboards, alerting |
 | [`standards/governance.md`](standards/governance.md) | Ownership model, risk-based merge policy, policy lifecycle, living standards, ADRs |
