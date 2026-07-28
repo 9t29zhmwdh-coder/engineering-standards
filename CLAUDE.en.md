@@ -30,60 +30,14 @@ These guidelines apply to all projects, especially public portfolio tools on Git
 
 **This is the biggest difference from standard code.** For public portfolio tools, security MUST be built in from day 1.
 
-### Security features: before the first line of code
-- ✅ **Authentication & Authorization**
-  - MFA (Multi-Factor Authentication): not optional, from day 1
-  - RBAC or ABAC (Role/Attribute-Based Access Control)
-  - Least Privilege Principle
-  - Session management with timeout & rotation
+### Security standard: canonical source
 
-- ✅ **Input Validation & Sanitization**
-  - Whitelist > Blacklist
-  - Validate at boundaries (user input, APIs, DB)
-  - Never trust untrusted input
+The full, binding security standard lives in this repository under `standards/security.md`, rather than being duplicated here as a second list that would drift out of sync:
 
-- ✅ **Secrets Management**
-  - No hardcoded passwords/keys in code
-  - Azure Key Vault for production secrets
-  - Environment variables for development (with .env.example, never commit .env)
+- `standards/security.md`, 12 sections: STRIDE threat modeling, zero trust principles, secure defaults, identity and access (Entra ID, MFA, RBAC/ABAC, Managed Identity), secrets management, personal and third-party information (top priority, since 2026-07-11), input validation and sanitization, encryption, secure error handling, dependency governance and SBOM (CycloneDX), audit logging, release gate
+- `templates/security-checklist.md`, the checklist to work through per release, including sign-off (reviewer, date, version)
 
-- ✅ **Personal & Third-Party Information** (top priority, since 2026-07-11)
-  - No repository (public or private) contains real names, hostnames, IP addresses, or other identifying details of a third party (employer, client, colleague), unless that party has explicitly agreed to the reference
-  - Metadata fields that commonly carry this unnoticed (`Company`/`Publisher`/`Author` in `.csproj`, `Info.plist`, `package.json`, Cargo `authors`, installer scripts) are checked before first publish and on every release
-  - A tool originally built in the context of employment is reviewed for IP ownership before being published as a personal project; when in doubt, the employer's moonlighting/IP policy governs, not this document
-  - Example configuration, screenshots, and demo data use synthetic values, never real internal hostnames, real customer names, or real production data
-
-- ✅ **Intrusion Detection & Audit Logging**
-  - Rate limiting (login, API endpoints)
-  - Failed login tracking & lockout
-  - Audit logs for sensitive operations (who, what, when, why)
-  - Anomaly detection (unusual access patterns)
-
-- ✅ **Encryption**
-  - TLS/HTTPS in transit (standard)
-  - AES-256 for sensitive data at rest
-  - Use industry-standard algorithms (SHA-256, PBKDF2 for passwords)
-
-- ✅ **Secure Error Handling**
-  - No stack traces in client responses
-  - No DB errors leaked to users
-  - Generic error messages to clients, detailed logs internally
-
-- ✅ **Dependency Security**
-  - npm audit, pip check, dotnet outdated before every release
-  - Lock files (package-lock.json, requirements.txt)
-  - No arbitrary upgrades in production
-
-### Security checklist (before every release)
-- [ ] MFA implemented?
-- [ ] All user inputs validated?
-- [ ] No secrets in code?
-- [ ] No employer/client references in code, metadata, or docs?
-- [ ] Audit logging in place?
-- [ ] Error messages safe (no leaks)?
-- [ ] Dependencies up to date & audited?
-- [ ] OWASP Top 10 checked? (Injection, Auth, Sensitive Data, XML, Broken Auth, etc.)
-- [ ] Penetration test performed? (at least a manual security review)
+Before every release: copy `templates/security-checklist.md` and work through it, rather than reconstructing it from memory.
 
 ---
 
@@ -101,19 +55,7 @@ These guidelines apply to all projects, especially public portfolio tools on Git
 
 ### GitHub Ruleset (technically enforced, not just policy)
 
-Every public repo gets the ruleset `solo-main-protection` on the default branch at creation:
-- `deletion`: branch deletion blocked
-- `non_fast_forward`: force push blocked
-- `pull_request`: PR required before merge, `required_approving_review_count: 0` (solo workflow, no self-approval deadlock)
-- No `bypass_actor` set, so it also applies to the owner
-
-**Setup for new repos:**
-```bash
-gh api repos/<owner>/<repo>/rulesets -X POST --input ruleset.json
-```
-The ruleset template lives in this repo: `ruleset-template.json`
-
-**Monthly auto-check:** Verifies that all public repos have this ruleset active (`gh api repos/<owner>/<repo>/rulesets`). If missing, it is added via the audit PR.
+Every public repo gets the ruleset `solo-main-protection` on the default branch at creation. Setup commands, template path, monthly auto-check and the portfolio-wide baseline (including the known CodeQL limitation) are in `standards/release-process.md` section 1.
 
 ### Semantic Versioning (MAJOR.MINOR.PATCH)
 - **MAJOR:** Breaking changes (e.g. API breaking change)
@@ -127,17 +69,8 @@ v1.1.0 -> v1.1.1 (bug fix)
 v1.x.x -> v2.0.0 (breaking change)
 ```
 
-### Release process
-1. Update version in package.json/setup.py/csproj
-2. Update CHANGELOG.md (what changed for users?)
-3. Create release tag: `git tag v1.0.0`
-4. Push to GitHub with release notes
-5. Never amend/rebase published commits
-
-### Rollback capability
-- Every version has a git tag
-- Rollback = `git checkout v1.0.0` (old) or `git reset --hard <commit-hash>`
-- CHANGELOG documents breaking changes
+### Release process & rollback capability
+Step-by-step process, versioning discipline (every merged change is versioned, tag and release included) and rollback procedure are in `standards/release-process.md`.
 
 ---
 
@@ -173,11 +106,7 @@ npm run build     # or python setup.py build
 ## 5. CODE QUALITY & ARCHITECTURE
 
 ### SOLID principles (Microsoft standard)
-- **S**ingle Responsibility: one class = one reason to change
-- **O**pen/Closed: open for extension, closed for modification
-- **L**iskov Substitution: subclasses should be able to replace superclasses
-- **I**nterface Segregation: clients should not implement methods they do not need
-- **D**ependency Inversion: depend on abstractions, not concrete implementations
+Standard SOLID principles, applied consistently.
 
 ### DRY, KISS, YAGNI
 - **DRY (Don't Repeat Yourself):** 3x copy = abstract, 2x = consider, 1x = ok
@@ -203,31 +132,7 @@ npm run build     # or python setup.py build
 
 ## 6. MICROSOFT STACK SPECIFIC
 
-Since you primarily develop for M365/Azure/Windows:
-
-### M365 authentication (Graph API)
-- Use the Microsoft Graph SDK (do not build your own auth)
-- OAuth 2.0 with Azure AD (not Basic Auth!)
-- MFA via Azure AD
-- Token refresh strategy
-
-### Azure deployment
-- Infrastructure as Code (ARM templates, Bicep, or Terraform)
-- Use Azure Key Vault for secrets
-- Use Managed Identity when possible (not service principals with secrets)
-- Staging before production deployment
-
-### Windows/ARM targeting
-- Build & test for both x86 and ARM
-- Visual Studio for desktop apps, VS Code for cloud/web
-- Use .NET 6+ (LTS) for long-term support
-- PowerShell 7+ (cross-platform)
-
-### Package management
-- NuGet for .NET
-- npm for Node.js
-- pip for Python
-- GitHub Packages for private packages
+Since you primarily develop for M365/Azure/Windows: details (Graph API auth, Azure deployment, Windows/ARM targeting, package management) are in `standards/microsoft-stack.md`, with Azure resource design in `standards/azure-integration.md`.
 
 ---
 
@@ -280,107 +185,19 @@ This rule also applies to changes to this CLAUDE.md itself and to `ruleset-templ
 
 ## 8. DOCUMENTATION
 
-For public portfolio code:
-
-### README.md (entry point)
-- What does this do? (1-2 sentences)
-- Quick start (copy-paste setup)
-- Features & limitations
-- Architecture overview (brief)
-- How to contribute
-- License
-
-### API documentation
-- Docstrings/comments for every public function
-- Parameter types & return types
-- Example usage
-- Exceptions/error cases
-
-### Architecture Decision Record (ADR)
-For larger tools:
-- Why this architecture?
-- Which alternatives were considered?
-- Tradeoffs?
-- Decision date
-
-### CHANGELOG.md
-```
-## [1.1.0] - 2026-07-03
-### Added
-- New MFA feature via Azure AD
-
-### Fixed
-- Security: Fixed XSS vulnerability in form inputs
-
-### Changed
-- Improved performance of user list query
-
-### Security
-- Updated dependencies (npm audit fix)
-```
+For public portfolio code: README structure, API doc requirements, ADR format and CHANGELOG format are in `standards/documentation.md`.
 
 ---
 
 ## 9. DEPLOYMENT & RELEASE
 
-### Pre-release checklist
-- [ ] Version updated (MAJOR.MINOR.PATCH)
-- [ ] CHANGELOG updated
-- [ ] All tests passing
-- [ ] Security checklist completed
-- [ ] Dependencies audited
-- [ ] Documentation updated
-- [ ] Code review approved
-- [ ] Build artifacts tested
-
-### Release process
-1. Create release tag: `git tag v1.0.0`
-2. Push tag: `git push origin v1.0.0`
-3. Create GitHub release with CHANGELOG
-4. Deploy to production (if applicable)
-5. Monitor for errors
-
-### Rollback plan
-- Keep the previous version available
-- Document rollback steps (script or manual)
-- Test rollback in staging first
+Pre-release checklist, release process and rollback plan are in `standards/release-process.md` sections 3 to 5.
 
 ---
 
 ## 10. PORTFOLIO TOOL SPECIFIC CHECKLIST
 
-Before publishing a tool on GitHub:
-
-### Core features
-- [ ] Main feature works & is tested
-- [ ] Error handling robust
-- [ ] Logging for debugging
-- [ ] Help/usage documented
-
-### Security
-- [ ] Security checklist done
-- [ ] No secrets in the repo
-- [ ] No credentials in .env
-- [ ] Input validation implemented
-- [ ] OWASP Top 10 checked
-
-### Quality
-- [ ] Tests green (unit + integration)
-- [ ] Linting & format OK
-- [ ] No dead code
-- [ ] Meaningful commit messages
-
-### Documentation
-- [ ] README.md complete
-- [ ] API docs present
-- [ ] CHANGELOG.md up to date
-- [ ] License included (MIT, Apache, etc.)
-
-### GitHub
-- [ ] README rendering OK
-- [ ] .gitignore present (node_modules, .env, etc.)
-- [ ] LICENSE file present
-- [ ] GitHub Actions for CI/CD (optional but recommended)
+Before publishing a tool on GitHub: the full checklist (core features, security, quality, documentation, GitHub setup) is in `templates/portfolio-publish-checklist.md`.
 
 ---
 
@@ -417,7 +234,7 @@ This CLAUDE.md is **living** and is automatically checked monthly for:
 
 ---
 
-**Version:** 2026-07-05
+**Version:** 2026-07-28
 **Last auto-check:** Never (checked monthly)
 **Applies to:** All portfolio projects, especially GitHub public repos
 **Microsoft focus:** M365, Azure, Windows (x86/ARM)

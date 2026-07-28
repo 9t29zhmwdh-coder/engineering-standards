@@ -15,7 +15,7 @@ It is normative, not aspirational: every rule here is either technically enforce
 - [`CLAUDE.md`](CLAUDE.md) is the operative instruction set: linked as global Claude Code instructions on every development machine, so an AI pair-programmer follows the exact same rules everywhere. [`CLAUDE.en.md`](CLAUDE.en.md) is its English reference translation.
 - [`standards/`](standards/) is the detailed technical reference this README summarizes: architecture, security, Azure integration, CI/CD, observability, governance, and per-language coding standards.
 - [`examples/`](examples/) contains complete, working reference implementations: a CI pipeline, an Azure Policy definition, and a worked STRIDE threat model.
-- [`templates/`](templates/) contains the copy-paste starting points used across the portfolio: a README template, an Architecture Decision Record template, and a per-release security checklist.
+- [`templates/`](templates/) contains the copy-paste starting points used across the portfolio: a README template, an Architecture Decision Record template, a per-release security checklist, and a pre-publish checklist for new tools.
 - [`ruleset-template.json`](ruleset-template.json) is the GitHub ruleset (`solo-main-protection`) applied to every public repository's default branch.
 
 ## Microsoft-Style Principles
@@ -35,6 +35,9 @@ It is normative, not aspirational: every rule here is either technically enforce
 | [`standards/security.md`](standards/security.md) | STRIDE threat modeling, Zero Trust, secrets, encryption, SBOM, audit logging |
 | [`standards/azure-integration.md`](standards/azure-integration.md) | Entra ID, Azure Monitor, Event Hub, resource naming, Bicep/ARM, Azure Policy |
 | [`standards/ci-cd.md`](standards/ci-cd.md) | Runner matrix, required pipeline stages, OIDC federation, SBOM generation, release automation |
+| [`standards/release-process.md`](standards/release-process.md) | Ruleset setup, versioning discipline, release steps, pre-release checklist, rollback |
+| [`standards/documentation.md`](standards/documentation.md) | README structure, API docs, ADR, CHANGELOG format, language conventions |
+| [`standards/microsoft-stack.md`](standards/microsoft-stack.md) | Graph API auth, Azure deployment, Windows/ARM targeting, package management |
 | [`standards/observability.md`](standards/observability.md) | Structured logging, correlation, RED/USE metrics, dashboards, alerting |
 | [`standards/governance.md`](standards/governance.md) | Ownership model, risk-based merge policy, policy lifecycle, living standards, ADRs |
 | [`standards/coding-rust.md`](standards/coding-rust.md) | Clippy discipline, async runtime rules, sqlx, dead code, dependency declaration |

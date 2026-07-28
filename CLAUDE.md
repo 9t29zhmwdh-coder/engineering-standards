@@ -32,8 +32,8 @@ Diese Richtlinien gelten für alle Projekte, insbesondere für öffentliche Port
 
 Der vollständige, verbindliche Security-Standard lebt in diesem Repo unter `standards/security.md`, nicht als separate Liste hier dupliziert, um Drift zwischen zwei Kopien zu vermeiden:
 
-- `standards/security.md` — 12 Abschnitte: STRIDE-Threat-Modeling, Zero Trust Principles, Secure Defaults, Identity & Access (Entra ID, MFA, RBAC/ABAC, Managed Identity), Secrets Management, Persönliche & Drittanbieter-Informationen (oberste Priorität, seit 2026-07-11), Input Validation & Sanitization, Encryption, Secure Error Handling, Dependency Governance & SBOM (CycloneDX), Audit Logging, Release Gate
-- `templates/security-checklist.md` — die abzuhakende Checkliste pro Release, inklusive Sign-off (Reviewer, Datum, Version)
+- `standards/security.md`, 12 Abschnitte: STRIDE-Threat-Modeling, Zero Trust Principles, Secure Defaults, Identity & Access (Entra ID, MFA, RBAC/ABAC, Managed Identity), Secrets Management, Persönliche & Drittanbieter-Informationen (oberste Priorität, seit 2026-07-11), Input Validation & Sanitization, Encryption, Secure Error Handling, Dependency Governance & SBOM (CycloneDX), Audit Logging, Release Gate
+- `templates/security-checklist.md`, die abzuhakende Checkliste pro Release, inklusive Sign-off (Reviewer, Datum, Version)
 
 Vor jedem Release: `templates/security-checklist.md` kopieren und abarbeiten, nicht aus dem Gedächtnis rekonstruieren.
 
@@ -53,21 +53,7 @@ Vor jedem Release: `templates/security-checklist.md` kopieren und abarbeiten, ni
 
 ### GitHub Ruleset (technisch erzwungen, nicht nur Richtlinie)
 
-Jedes Public Repo bekommt bei Erstellung das Ruleset `solo-main-protection` auf dem Default-Branch:
-- `deletion`: Branch-Löschung blockiert
-- `non_fast_forward`: Force-Push blockiert
-- `pull_request`: PR vor Merge erforderlich, `required_approving_review_count: 0` (Solo-Workflow, kein Self-Approval-Deadlock)
-- Kein `bypass_actor` gesetzt → gilt auch für den Owner selbst
-
-**Setup für neue Repos:**
-```bash
-gh api repos/<owner>/<repo>/rulesets -X POST --input ruleset.json
-```
-Ruleset-Template liegt in diesem Repo: `ruleset-template.json`
-
-**Monatlicher Auto-Check:** Prüft, ob alle Public Repos dieses Ruleset aktiv haben (`gh api repos/<owner>/<repo>/rulesets`). Fehlt es, wird es im Audit-PR nachgetragen.
-
-**Portfolio-weite Baseline (Stand 2026-07-21):** `required_status_checks` (CI muss grün sein, bevor GitHub den Merge überhaupt zulässt) ist nach erfolgreichem Pilot auf `WorkplaceAssessment` auf allen Public Repos direkt gesetzt. `ruleset-template.json` enthält einen minimalen universellen Eintrag (`Analyze (actions)`) als Default für neue Repos; die tatsächlich erzwungenen Checks pro bestehendem Repo sind stack-spezifisch und wurden einzeln per API ergänzt. Details, inkl. einer bekannten Einschränkung (der generische `CodeQL`-Check zeigt bei manchen Repos `skipping` statt `success`), siehe `standards/ci-cd.md` Abschnitt 7.
+Jedes Public Repo bekommt bei Erstellung das Ruleset `solo-main-protection` auf dem Default-Branch. Setup-Befehle, Template-Pfad, monatlicher Auto-Check und die Portfolio-weite Baseline (inkl. bekannter CodeQL-Einschränkung) siehe `standards/release-process.md` Abschnitt 1.
 
 ### Semantic Versioning (MAJOR.MINOR.PATCH)
 - **MAJOR:** Breaking Changes (z.B. API Breaking Change)
@@ -81,17 +67,8 @@ v1.1.0 → v1.1.1 (bug fix)
 v1.x.x → v2.0.0 (breaking change)
 ```
 
-### Release Process
-1. Update Version in package.json/setup.py/csproj
-2. Update CHANGELOG.md (Was hat sich geändert für Users?)
-3. Create Release Tag: `git tag v1.0.0`
-4. Push to GitHub with Release Notes
-5. Never Amend/Rebase published Commits
-
-### Rollback Capability
-- Jede Version hat einen Git Tag
-- Rollback = `git checkout v1.0.0` (alt) oder `git reset --hard <commit-hash>`
-- CHANGELOG dokumentiert Breaking Changes
+### Release Process & Rollback Capability
+Schritt-für-Schritt-Ablauf, Versionierungsdisziplin (jede gemergte Änderung wird versioniert, inklusive Tag und Release) und Rollback-Vorgehen siehe `standards/release-process.md`.
 
 ---
 
@@ -127,11 +104,7 @@ npm run build     # oder python setup.py build
 ## 5. CODE QUALITY & ARCHITECTURE
 
 ### SOLID Principles (Microsoft Standard)
-- **S**ingle Responsibility: Eine Klasse = eine Reason to Change
-- **O**pen/Closed: Offen für Extension, Geschlossen für Modification
-- **L**iskov Substitution: Subclasses sollten Superclasses ersetzen können
-- **I**nterface Segregation: Clients sollten nicht Methoden implementieren, die sie nicht brauchen
-- **D**ependency Inversion: Depend on Abstractions, not Concrete Implementations
+Standard SOLID-Prinzipien, konsequent durchsetzen.
 
 ### DRY, KISS, YAGNI
 - **DRY (Don't Repeat Yourself):** 3x Copy = abstrahieren, 2x = consider, 1x = ok
@@ -157,31 +130,7 @@ npm run build     # oder python setup.py build
 
 ## 6. MICROSOFT STACK SPECIFIC
 
-Da du primär für M365/Azure/Windows entwickelst:
-
-### M365 Authentication (Graph API)
-- Verwende Microsoft Graph SDK (nicht eigene Auth bauen)
-- OAuth 2.0 mit Azure AD (nicht Basic Auth!)
-- MFA via Azure AD
-- Token Refresh Strategy
-
-### Azure Deployment
-- Infrastructure as Code (ARM Templates, Bicep, oder Terraform)
-- Use Azure Key Vault für Secrets
-- Use Managed Identity wenn möglich (nicht Service Principals mit Secrets)
-- Staging vor Production Deployment
-
-### Windows/ARM Targeting
-- Build & Test für beide x86 und ARM
-- Visual Studio für Desktop Apps, VS Code für Cloud/Web
-- Use .NET 6+ (LTS) für Long-Term Support
-- PowerShell 7+ (cross-platform)
-
-### Package Management
-- NuGet für .NET
-- npm für Node.js
-- pip für Python
-- GitHub Packages für Private Packages
+Da du primär für M365/Azure/Windows entwickelst: Details (Graph API Auth, Azure Deployment, Windows/ARM Targeting, Package Management) siehe `standards/microsoft-stack.md`, für Azure-Ressourcen zusätzlich `standards/azure-integration.md`.
 
 ---
 
@@ -234,107 +183,19 @@ Diese Regel gilt auch für Änderungen an dieser CLAUDE.md selbst sowie am `rule
 
 ## 8. DOCUMENTATION
 
-Für öffentliches Portfolio Code:
-
-### README.md (Entry Point)
-- What does this do? (1-2 Sätze)
-- Quick Start (Copy-Paste Setup)
-- Features & Limitations
-- Architecture Overview (kurz)
-- How to Contribute
-- License
-
-### API Documentation
-- Docstrings/Comments für jede Public Function
-- Parameter Types & Return Types
-- Example Usage
-- Exceptions/Error Cases
-
-### Architecture Decision Record (ADR)
-Für grössere Tools:
-- Warum diese Architektur?
-- Welche Alternativen wurden betrachtet?
-- Tradeoffs?
-- Decision Date
-
-### CHANGELOG.md
-```
-## [1.1.0] - 2026-07-03
-### Added
-- New MFA feature via Azure AD
-
-### Fixed
-- Security: Fixed XSS vulnerability in form inputs
-
-### Changed
-- Improved performance of user list query
-
-### Security
-- Updated dependencies (npm audit fix)
-```
+Für öffentliches Portfolio Code: README-Struktur, API-Doc-Vorgaben, ADR-Format und CHANGELOG-Format siehe `standards/documentation.md`.
 
 ---
 
 ## 9. DEPLOYMENT & RELEASE
 
-### Pre-Release Checklist
-- [ ] Version updated (MAJOR.MINOR.PATCH)
-- [ ] CHANGELOG updated
-- [ ] All Tests Passing
-- [ ] Security Checklist completed
-- [ ] Dependencies audited
-- [ ] Documentation updated
-- [ ] Code Review approved
-- [ ] Build artifacts tested
-
-### Release Process
-1. Create Release Tag: `git tag v1.0.0`
-2. Push Tag: `git push origin v1.0.0`
-3. Create GitHub Release with CHANGELOG
-4. Deploy to Production (if applicable)
-5. Monitor for Errors
-
-### Rollback Plan
-- Keep Previous Version Available
-- Document Rollback Steps (script or manual)
-- Test Rollback in Staging First
+Pre-Release-Checkliste, Release-Prozess und Rollback-Plan siehe `standards/release-process.md` Abschnitte 3 bis 5.
 
 ---
 
 ## 10. PORTFOLIO TOOL SPECIFIC CHECKLIST
 
-Bevor du ein Tool auf GitHub publishest:
-
-### Core Features
-- [ ] Main Feature funktioniert & getestet
-- [ ] Error Handling robust
-- [ ] Logging für Debugging
-- [ ] Help/Usage dokumentiert
-
-### Security
-- [ ] Security Checklist abgehakt
-- [ ] No Secrets in Repo
-- [ ] No Credentials in .env
-- [ ] Input Validation implemented
-- [ ] OWASP Top 10 gecheckt
-
-### Quality
-- [ ] Tests grün (Unit + Integration)
-- [ ] Linting & Format OK
-- [ ] No Dead Code
-- [ ] Meaningful Commit Messages
-
-### Documentation
-- [ ] README.md vollständig
-- [ ] API Docs vorhanden
-- [ ] CHANGELOG.md aktuell
-- [ ] License included (MIT, Apache, etc.)
-
-### GitHub
-- [ ] README rendering OK
-- [ ] .gitignore vorhanden (node_modules, .env, etc.)
-- [ ] LICENSE file vorhanden
-- [ ] GitHub Actions für CI/CD (optional aber empfohlen)
+Bevor du ein Tool auf GitHub publishest: vollständige Checkliste (Core Features, Security, Quality, Documentation, GitHub-Setup) siehe `templates/portfolio-publish-checklist.md`.
 
 ---
 
@@ -371,7 +232,7 @@ Diese CLAUDE.md ist **lebendig** und wird monatlich automatisch geprüft auf:
 
 ---
 
-**Version:** 2026-07-05  
+**Version:** 2026-07-28  
 **Last Auto-Check:** Nie (wird monatlich geprüft)  
 **Gültig für:** Alle Portfolio-Projekte unter C:\Users\RafaelYilmaz, besonders für GitHub Public Repos  
 **Microsoft Focus:** M365, Azure, Windows (x86/ARM)
