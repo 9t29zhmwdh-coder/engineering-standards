@@ -3,6 +3,16 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.0] - 2026-07-28
+
+### Changed
+
+- `templates/dependabot.yml` and `standards/ci-cd.md` section 2 now require minor and patch updates to be grouped per ecosystem while majors arrive individually. The template shipped in 0.10.0 grouped everything, which produced a pull request carrying React 18 to 19, Tailwind 3 to 4, recharts 2 to 3 and zustand 4 to 5 in one diff, with an urgently needed security patch buried inside it. Actions stay grouped wholesale, majors included: the diff is a handful of SHA lines and a stale pin is a supply-chain concern rather than a compatibility one.
+
+### Note
+
+- Also learned on 2026-07-28, and worth recording because it nearly caused a wrong decision: the generic `CodeQL` status check is produced by the `github-advanced-security` app, not by CodeQL's default setup. It reports `skipping` when no analysis runs at all, which is what made dependency pull requests permanently unmergeable. Moving a repository to an advanced setup with a committed workflow makes it report `success` normally. Removing it from a ruleset's required checks is therefore not necessary and would weaken the gate for nothing.
+
 ## [0.10.0] - 2026-07-28
 
 ### Added
