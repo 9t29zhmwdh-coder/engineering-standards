@@ -7,7 +7,9 @@ Baseline for every GitHub Actions pipeline across the portfolio. See [`../exampl
 - Cross-platform tools (anything shipping a Windows and a macOS/Linux build) run their check/test matrix on both `windows-latest` and `ubuntu-latest` at minimum; `macos-latest` is added when the tool targets macOS specifically (for example, Tauri desktop apps).
 - A pipeline is not considered green until every matrix leg passes; there is no "informational only" leg for a supported platform.
 
-## 2. Action Pinning (Supply Chain Integrity)
+## 2. Pinning (Supply Chain Integrity)
+
+### Actions
 
 - Every third-party GitHub Action used in a workflow is pinned to a full commit SHA, not a mutable version tag (`@v2`) or branch/alias (`@stable`, `@main`). A tag or branch can be force-moved to point at different, potentially malicious code after the fact without changing the workflow file; a commit SHA cannot.
 - Pin with a trailing comment noting the human-readable version for maintainability: `uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0`.
@@ -15,6 +17,34 @@ Baseline for every GitHub Actions pipeline across the portfolio. See [`../exampl
 - Dependabot (or Renovate) is configured with `github-actions` ecosystem updates enabled, so pinned SHAs are bumped via a normal, reviewable PR on a schedule rather than silently freezing a repository on a stale or later-disclosed-vulnerable action version.
 - Check the version comment on every dependency PR. Dependabot updates the SHA and leaves the comment untouched, so a major bump lands as `actions/checkout@<new sha> # v6` while the pin actually resolves to v7. The comment is the only human-readable version signal in the file, and a wrong one is worse than none. Verify the SHA belongs to the claimed tag with `gh api repos/<owner>/<action>/git/refs/tags --jq '.[] | select(.object.sha=="<sha>") | .ref'`.
 - Pin every occurrence of the same action to the same SHA. Separate workflow files drift apart when one of them is updated by a PR that does not touch the others, which leaves a repository claiming one version while running two.
+
+### Tooling inside the job
+
+The pinning rule does not stop at the `uses:` lines. Every linter,
+formatter, build and audit tool a job installs is pinned to an exact
+version (`ruff==0.16.0`, `build==1.5.0`, `pip-audit==2.10.1`), never to an
+open range (`ruff>=0.6`) and never unversioned.
+
+- An open range means the runner resolves the newest release at run time,
+  so the same commit produces a different result tomorrow than today.
+  For a formatter or an import sorter this is not an edge case but the
+  normal path: new releases routinely change what counts as correctly
+  formatted. The build then turns red with no commit having touched the
+  code, and the failure looks like a regression in the PR that happens to
+  be open at the time. This has already cost debugging time on
+  `AdapterForge`, where `ruff>=0.6` picked up 0.16.0 and its changed
+  import ordering.
+- Check the whole job, not the obvious tool. The same workflow that
+  produced the failure above already pinned `build` and `pip-audit`
+  exactly; `ruff` was the single outlier, which is exactly why nobody
+  looked at it.
+- Enable the language ecosystem in Dependabot (`pip`, `npm`, `cargo`,
+  `nuget`) alongside `github-actions`, so a pinned tool is bumped by a
+  reviewable PR whose CI run shows the reformatting before it lands, and
+  the pin does not silently rot instead.
+- A tool upgrade that reformats source is a normal patch release of the
+  repository, with the reformatting in its own commit, separate from the
+  version bump.
 - This applies from the first commit of a new repository. A repository found running an unpinned action is corrected as soon as discovered, with the fix treated as a normal patch release, the same retroactive-correction rule as Section 6 of `security.md`.
 
 ## 3. Required Pipeline Stages
