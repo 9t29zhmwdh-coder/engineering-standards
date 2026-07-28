@@ -3,6 +3,12 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.1] - 2026-07-28
+
+### Fixed
+
+- `standards/writing-style.md` gave a `grep` over files as the mechanical check for the dash rule, but repository descriptions, topics and the profile bio live in API fields that no file grep can reach. Three descriptions had carried em-dashes through every previous scan of repositories whose contents were checked repeatedly. The section now includes a command that walks the descriptions of all repositories and the bio, and names release notes, issue titles and pull request titles as text that is equally out of reach of a file scan.
+
 ## [0.11.0] - 2026-07-28
 
 ### Changed

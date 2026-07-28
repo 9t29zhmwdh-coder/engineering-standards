@@ -16,6 +16,24 @@ Search the text mechanically for `—` and `–` before committing or sending it
 grep -rn "—\|–" --include="*.md" . --exclude-dir=.git
 ```
 
+**Text outside the repository counts too, and a file grep will never see
+it.** Repository descriptions, topics and the GitHub bio are read before
+anything else, in search results and on the profile page, yet they live in
+API fields rather than in any file. Check them separately:
+
+```bash
+for r in $(gh repo list <owner> --limit 100 --json name --jq '.[].name'); do
+  d=$(gh api "repos/<owner>/$r" --jq '.description // ""')
+  case "$d" in *—*|*–*) echo "$r: $d";; esac
+done
+gh api users/<owner> --jq '.bio'
+```
+
+Three descriptions survived every file-based scan this way until
+2026-07-28, on repositories whose contents had been checked repeatedly.
+The same applies to release notes written in the GitHub UI, issue and
+pull request titles, and any profile field.
+
 **Why this rule exists:** dashes used this way are a strong stylistic marker of machine-generated text. This portfolio is openly AI-assisted (see [`governance.md`](governance.md) and `CLAUDE.md` section 12), and that transparency only works when the writing itself reads as deliberate rather than generated. A violation in the GitHub bio cost real time to notice and fix on 2026-07-10.
 
 **Existing text is not a precedent.** A scan across 30 repositories found 95 violations sitting in old changelog headers and feature descriptions. Their presence means the rule arrived after them, not that they are acceptable. Fix what you touch; do not copy the pattern because it is already there.
