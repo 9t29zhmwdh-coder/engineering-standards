@@ -9,13 +9,20 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - `standards/ci-cd.md` section 6 gains a rule for macOS target architectures: release artifacts are universal binaries covering `arm64` and `x86_64`, the packaging target enforces this with `lipo -archs` instead of the README merely claiming it, and the binary path comes from `swift build --show-bin-path` rather than a hardcoded directory. Found in practice on `ServiceLLM`, which shipped four releases with an arm64-only DMG while no checklist anywhere caught it, because no rule on target architectures existed.
 
+- `standards/ci-cd.md` section 2 gains two rules that follow from the same release: verify the version comment on every Dependabot PR, because Dependabot bumps the SHA and leaves the comment on the old major, and pin every occurrence of an action to the same SHA, because separate workflow files drift apart.
+
 ### Changed
 
 - `standards/ci-cd.md` section 9 now specifies `actions/attest` instead of `actions/attest-build-provenance`. The latter is only a wrapper around the former as of its v4, and GitHub points new implementations at `actions/attest`. The section names the one migration trap: `actions/attest` requires a third permission, `artifact-metadata: write`, which otherwise only surfaces when the next tag push fails.
 
+### Fixed
+
+- Removed 12 em-dashes from `templates/new-repo-bootstrap-checklist.md` and `standards/ci-cd.md`. Swiss orthography rule, and the standards repository should not violate the rule it defines.
+
 ### Note
 
 - The repository referred to as `CodeWhisper` in 0.5.3 was renamed to `ServiceLLM` on 2026-07-28.
+- `CLAUDE.md` still carries two em-dashes. It has uncommitted local changes from an earlier session, so it was deliberately left untouched here.
 
 ## [0.5.3] - 2026-07-21
 

@@ -19,7 +19,7 @@ still valid (see `security.md` section 6's retroactive-correction rule), but
 the goal is that new repositories don't need the correction in the first
 place.
 
-## Phase 0 — Decisions made once, before any file exists
+## Phase 0: Decisions made once, before any file exists
 
 - [ ] License model decided: MIT (default for this portfolio) or, if the
       project is a plausible Dual-Licensing candidate (an enterprise-shaped
@@ -32,7 +32,7 @@ place.
 - [ ] Repository name and description contain no employer, client, or
       colleague reference.
 
-## Phase 1 — Repository scaffold (mechanical, identical every time)
+## Phase 1: Repository scaffold (mechanical, identical every time)
 
 - [ ] `LICENSE` (MIT, from Phase 0's decision)
 - [ ] `.gitignore` for the target language, reviewed line by line: it does
@@ -49,7 +49,7 @@ place.
       Phase 0
 - [ ] `SECURITY.md` from `templates/security-policy-template.md`, every
       placeholder filled in and every claim verified true against this
-      repository's actual state (not copy-pasted aspirationally — see that
+      repository's actual state (not copy-pasted aspirationally, see that
       template's usage note)
 - [ ] Private vulnerability reporting enabled
       (`gh api -X PUT repos/<owner>/<repo>/private-vulnerability-reporting`):
@@ -60,11 +60,11 @@ place.
       `gh api repos/<owner>/<repo>/rulesets` **at creation**, not deferred
       until after the first release (`governance.md`, `ci-cd.md` section 7)
 
-## Phase 2 — CI baseline (mechanical, in place before the first feature PR)
+## Phase 2: CI baseline (mechanical, in place before the first feature PR)
 
 - [ ] CI workflow adapted from `examples/ci-pipeline-example.yml`
 - [ ] Every action pinned to a commit SHA from the first commit
-      (`ci-cd.md` section 2) — there is no "pin it later" grace period
+      (`ci-cd.md` section 2), there is no "pin it later" grace period
 - [ ] Lint, build, and test stages present, even if tests are currently
       minimal; a zero-test repository is a tracked `ROADMAP.md` gap, not a
       silently skipped CI stage
@@ -86,24 +86,24 @@ place.
       via `gh api -X PATCH repos/<owner>/<repo>`); secret scanning and push
       protection (usually on by default for public repos, verify with
       `gh api repos/<owner>/<repo> --jq .security_and_analysis` anyway)
-- [ ] OpenSSF Scorecard workflow added (`ci-cd.md` section 9) — this one
+- [ ] OpenSSF Scorecard workflow added (`ci-cd.md` section 9). This one
       does need a workflow file, unlike the toggles above; badge added
       to `README.md` once the first scan has run
 - [ ] Build provenance attestation added to the release job if this
       repository ships a packaged installer (`ci-cd.md` section 9),
       especially relevant before any paid marketplace distribution
 
-## Phase 3 — Feature development
+## Phase 3: Feature development
 
 Normal engineering standards apply (`coding-rust.md`, `coding-python.md`,
 `coding-typescript.md`, `architecture.md`, `observability.md`). No special
-bootstrap concern here beyond what Phases 1–2 already locked in.
+bootstrap concern here beyond what Phases 1 and 2 already locked in.
 
-## Phase 4 — Pre-first-publish verification
+## Phase 4: Pre-first-publish verification
 
 Run immediately before the repository's first public push / first tagged
 release, since there is no "since the last release" scope to shrink this
-to yet — everything is in scope:
+to yet. Everything is in scope:
 
 - [ ] Full pass of `security-checklist.md`, every applicable item, not just
       the parts touched by the most recent commit
@@ -124,7 +124,7 @@ to yet — everything is in scope:
       `COMMERCIAL.md`, and `ENTERPRISE_FEATURES.md` are internally
       consistent with `ROADMAP.md`'s Dual-Licensing Readiness section
 
-## Phase 5 — First release
+## Phase 5: First release
 
 - [ ] Tag pushed; local and `origin` `main`/`master` SHA compared and
       confirmed equal **before** tagging (an unpinned default-branch name

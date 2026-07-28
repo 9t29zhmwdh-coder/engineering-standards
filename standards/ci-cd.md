@@ -13,6 +13,8 @@ Baseline for every GitHub Actions pipeline across the portfolio. See [`../exampl
 - Pin with a trailing comment noting the human-readable version for maintainability: `uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0`.
 - This applies to first-party (`actions/*`) and third-party actions alike; there is no exception for "well-known" publishers.
 - Dependabot (or Renovate) is configured with `github-actions` ecosystem updates enabled, so pinned SHAs are bumped via a normal, reviewable PR on a schedule rather than silently freezing a repository on a stale or later-disclosed-vulnerable action version.
+- Check the version comment on every dependency PR. Dependabot updates the SHA and leaves the comment untouched, so a major bump lands as `actions/checkout@<new sha> # v6` while the pin actually resolves to v7. The comment is the only human-readable version signal in the file, and a wrong one is worse than none. Verify the SHA belongs to the claimed tag with `gh api repos/<owner>/<action>/git/refs/tags --jq '.[] | select(.object.sha=="<sha>") | .ref'`.
+- Pin every occurrence of the same action to the same SHA. Separate workflow files drift apart when one of them is updated by a PR that does not touch the others, which leaves a repository claiming one version while running two.
 - This applies from the first commit of a new repository. A repository found running an unpinned action is corrected as soon as discovered, with the fix treated as a normal patch release, the same retroactive-correction rule as Section 6 of `security.md`.
 
 ## 3. Required Pipeline Stages
@@ -115,7 +117,7 @@ workflow file:
   `gh api -X PUT repos/<owner>/<repo>/private-vulnerability-reporting`.
   Without this, the "report via GitHub Security Advisory" instruction in
   `SECURITY.md` (from `templates/security-policy-template.md`) does not
-  actually accept a submission — verify it is on, do not assume it defaults
+  actually accept a submission. Verify it is on, do not assume it defaults
   to on.
 - **Dependabot security updates**: enabled via
   `security_and_analysis.dependabot_security_updates.status` in a
