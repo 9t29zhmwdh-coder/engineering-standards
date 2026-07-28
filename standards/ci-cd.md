@@ -13,6 +13,8 @@ Baseline for every GitHub Actions pipeline across the portfolio. See [`../exampl
 - Pin with a trailing comment noting the human-readable version for maintainability: `uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0`.
 - This applies to first-party (`actions/*`) and third-party actions alike; there is no exception for "well-known" publishers.
 - Dependabot (or Renovate) is configured with `github-actions` ecosystem updates enabled, so pinned SHAs are bumped via a normal, reviewable PR on a schedule rather than silently freezing a repository on a stale or later-disclosed-vulnerable action version.
+- Check the version comment on every dependency PR. Dependabot updates the SHA and leaves the comment untouched, so a major bump lands as `actions/checkout@<new sha> # v6` while the pin actually resolves to v7. The comment is the only human-readable version signal in the file, and a wrong one is worse than none. Verify the SHA belongs to the claimed tag with `gh api repos/<owner>/<action>/git/refs/tags --jq '.[] | select(.object.sha=="<sha>") | .ref'`.
+- Pin every occurrence of the same action to the same SHA. Separate workflow files drift apart when one of them is updated by a PR that does not touch the others, which leaves a repository claiming one version while running two.
 - This applies from the first commit of a new repository. A repository found running an unpinned action is corrected as soon as discovered, with the fix treated as a normal patch release, the same retroactive-correction rule as Section 6 of `security.md`.
 
 ## 3. Required Pipeline Stages
@@ -59,6 +61,30 @@ steps:
 - Release notes are never hand-typed into the GitHub UI as the source of truth; `CHANGELOG.md` is the source of truth and the release description is generated from it.
 - Pre-release versions (`-alpha`, `-beta`, `-rc`) are marked as a GitHub pre-release and are not promoted to "latest" automatically.
 
+### Target architectures for macOS releases
+
+- A macOS release artifact is a universal binary covering `arm64` and
+  `x86_64`, for as long as Apple's toolchain still supports the latter.
+  Building on an Apple Silicon machine defaults to `arm64` only, so an
+  Intel Mac cannot start the result. Nothing in the pipeline notices this
+  by itself, which is exactly how it stays unnoticed until a user reports
+  it.
+- The build enforces this rather than the documentation asserting it: the
+  packaging target runs `lipo -archs` on the binary it is about to bundle
+  and fails when both architectures are not present. Documenting the
+  requirement in the README is not sufficient, because the README is not
+  what produces the artifact.
+- Multi-architecture output does not land in the single-architecture build
+  directory, and SwiftPM has moved that path between releases. Ask for it
+  with `swift build --show-bin-path` and the same architecture flags used
+  for the build instead of hardcoding a path. A hardcoded path silently
+  bundles the previous single-architecture binary, which produces a
+  release that contradicts its own release notes.
+- Apple is phasing `x86_64` out; recent SDKs emit a deprecation warning for
+  it. Treat continued Intel support as a decision to revisit per release,
+  not as a permanent guarantee. Once dropped, say so in the README's
+  requirements and in the download line, not only in a badge.
+
 ## 7. Branch and Merge Gating
 
 - The default branch is protected by the `solo-main-protection` ruleset (see the repository root [`ruleset-template.json`](../ruleset-template.json)): no force push, no branch deletion, PR required before merge.
@@ -91,7 +117,7 @@ workflow file:
   `gh api -X PUT repos/<owner>/<repo>/private-vulnerability-reporting`.
   Without this, the "report via GitHub Security Advisory" instruction in
   `SECURITY.md` (from `templates/security-policy-template.md`) does not
-  actually accept a submission — verify it is on, do not assume it defaults
+  actually accept a submission. Verify it is on, do not assume it defaults
   to on.
 - **Dependabot security updates**: enabled via
   `security_and_analysis.dependabot_security_updates.status` in a
@@ -122,14 +148,25 @@ workflow file:
   a schedule automatically, and the resulting badge is a public, verifiable
   signal of the repository's posture (relevant to this portfolio's
   visible-governance positioning, `CLAUDE.md` section 12).
-- **Build provenance / artifact attestation** (`actions/attest-build-provenance`):
-  for any repository that ships a packaged installer, the release job
-  generates a signed attestation proving the artifact was built by this
-  repository's actual CI from this actual source commit, not substituted
-  or tampered with afterward. This matters once a packaged build is
-  distributed for payment (see `COMMERCIAL.md`/`TERMS_OF_SALE.md` where
-  applicable): a purchaser, including a corporate one, can verify the
-  binary they received is genuine.
+- **Build provenance / artifact attestation** (`actions/attest`): for any
+  repository that ships a packaged installer, the release job generates a
+  signed attestation proving the artifact was built by this repository's
+  actual CI from this actual source commit, not substituted or tampered
+  with afterward. This matters once a packaged build is distributed for
+  payment (see `COMMERCIAL.md`/`TERMS_OF_SALE.md` where applicable): a
+  purchaser, including a corporate one, can verify the binary they
+  received is genuine. Verify from the consumer's side with
+  `gh attestation verify <artifact> -R <owner>/<repo>`, which is also the
+  cheapest way to confirm the release job actually signed anything.
+
+  Use `actions/attest`, not `actions/attest-build-provenance`. As of its
+  v4, the latter is only a wrapper around the former, and GitHub points
+  new implementations at `actions/attest` directly. The default mode
+  produces the same SLSA build provenance, so migrating means changing the
+  `uses:` line and nothing else, with one exception that will otherwise
+  only surface at the next tag push: `actions/attest` needs a third
+  permission, `artifact-metadata: write`, alongside `id-token: write` and
+  `attestations: write`.
 
 None of these three replace Section 3's required stages; they are
 additional, low-effort signals layered on top, enabled once at repository
