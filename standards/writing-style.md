@@ -10,11 +10,28 @@ Never use an em-dash (`—`, U+2014), an en-dash (`–`, U+2013), or a hyphen st
 
 Rewrite the sentence rather than swapping one dash for another. A colon introduces a list or an explanation, a comma carries a subordinate clause, and two sentences are usually clearer than one that needed a dash to hold it together.
 
-Search the text mechanically for `—` and `–` before committing or sending it:
+Search the text mechanically before committing or sending it. The two
+typographic dashes are the obvious half:
 
 ```bash
 grep -rn "—\|–" --include="*.md" . --exclude-dir=.git
 ```
+
+**A hyphen standing in for a dash passes that grep untouched**, and it is
+the form most likely to be written by hand. `drei Ansichten - Matrix` and
+`lief nicht mit - Jobs blieben haengen` both broke this rule while every
+scan reported the file clean, and both reached a changelog that release
+notes are generated from verbatim. Look for a hyphen surrounded by spaces
+and followed by a word, which a compound never is:
+
+```bash
+grep -rnE "[^-] - [A-Za-zÄÖÜäöü]" --include="*.md" . --exclude-dir=.git | grep -v "^\S*:[0-9]*: *-"
+```
+
+The trailing filter drops list items, where a leading `- ` is markup
+rather than punctuation. Read the remaining hits: a hyphen between two
+numbers or inside a quoted command is fine, one holding two clauses
+together is not.
 
 **Text outside the repository counts too, and a file grep will never see
 it.** Repository descriptions, topics and the GitHub bio are read before

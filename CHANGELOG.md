@@ -3,6 +3,14 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.2] - 2026-07-29
+
+### Changed
+
+- The dash check in `writing-style.md` also looks for a hyphen used as a dash. The rule always covered that form, but the command next to it searched only for `—` and `–`, so the one variant a person actually types by hand passed every scan. Two sentences in a portfolio changelog broke the rule while the file reported clean, and that text is what release notes are generated from verbatim, so it was one step away from being published rather than merely stored.
+
+---
+
 ## [0.11.1] - 2026-07-28
 
 ### Fixed
