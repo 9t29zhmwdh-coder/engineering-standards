@@ -3,6 +3,15 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.12.0] - 2026-07-29
+
+### Added
+
+- `standards/security-score.md`, recording what the OpenSSF Scorecard number can reach in this portfolio and what it cannot. Three checks (Code-Review, the gold tier of CII-Best-Practices, and the top tier of Branch-Protection) require a second person, so ten out of ten is not reachable by a single maintainer. The reachable ceiling is around eight, and the document lists the remaining steps in order of payoff, with the per-repository status as measured on 2026-07-29.
+- The largest single loss was Token-Permissions, which drops to 0 the moment any workflow carries a top-level write permission. Two repositories already granted it per job and were the two highest scores in the portfolio, which is what turned this from an estimate into a measurement.
+
+---
+
 ## [0.11.2] - 2026-07-29
 
 ### Changed
