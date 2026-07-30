@@ -3,6 +3,15 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.12.1] - 2026-07-30
+
+### Changed
+
+- Three tools appear under their new names: EmissaryKit was SwiftAgent, NetFathom was NetScanX, MailLoom was MailPilot. Each was renamed because another product carried the same name in the same category.
+- The CodeQL caveat in `ci-cd.md` named the wrong cause. It blamed a default-setup versus committed-workflow interaction, but all three affected repositories now run a committed `codeql.yml` and still see `skipping`, while three others require the same check and see it turn green on every pull request. The cause is unidentified, and the note now says so instead of offering an explanation the evidence contradicts.
+
+---
+
 ## [0.12.0] - 2026-07-29
 
 ### Added
