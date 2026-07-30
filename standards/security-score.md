@@ -60,7 +60,10 @@ had already been made twice by accident, and both times the check moved.
 
 ## 4. Per-repository status
 
-Recorded 2026-07-29, before the Token-Permissions rollout. `Sig` is
+Recorded 2026-07-29, before the Token-Permissions rollout. Three tools were
+renamed on 2026-07-30 and appear under their new names: EmissaryKit was
+SwiftAgent, NetFathom was NetScanX, MailLoom was MailPilot. The scores belong
+to the same repositories. `Sig` is
 Signed-Releases, `CII` is CII-Best-Practices. A dash means the check did
 not apply.
 
@@ -68,7 +71,7 @@ not apply.
 |---|---|---|---|---|---|
 | ServiceLLM | 6.3 | 10 | 0 | 0 | 0 |
 | agent-governance-console | 6.2 | 10 | 0 | 0 | 2 |
-| SwiftAgent | 6.1 | 0 | - | 0 | 2 |
+| EmissaryKit | 6.1 | 0 | - | 0 | 2 |
 | WorkplaceAssessment | 5.8 | 0 | 0 | 0 | 2 |
 | BugRadar | 5.5 | 0 | 0 | 0 | 2 |
 | ClarityDesk | 5.5 | 0 | 0 | 0 | 2 |
@@ -86,12 +89,12 @@ not apply.
 | NetSweep | 5.2 | 0 | 0 | 0 | 2 |
 | azure-policy-drift-detector | 5.1 | 0 | 0 | 0 | 2 |
 | entra-least-privilege-analyzer | 5.1 | 0 | 0 | 0 | 2 |
-| NetScanX | 5.1 | 0 | 0 | 0 | 2 |
+| NetFathom | 5.1 | 0 | 0 | 0 | 2 |
 | azure-cost-forecasting-engine | 5.0 | 0 | 0 | 0 | 2 |
 | eventhub-otlp-mapper | 5.0 | 0 | 0 | 0 | 2 |
 | DeviceHealth | 4.8 | 0 | 0 | 0 | 2 |
 | LifeSort | 4.8 | 0 | 0 | 0 | 2 |
-| MailPilot | 4.8 | 0 | 0 | 0 | 2 |
+| MailLoom | 4.8 | 0 | 0 | 0 | 2 |
 | SiliconMark | 4.8 | 0 | 0 | 0 | 2 |
 | NetDashboard | 4.5 | 0 | 0 | 0 | 2 |
 
