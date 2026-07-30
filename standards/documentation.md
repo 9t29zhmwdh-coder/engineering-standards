@@ -13,6 +13,36 @@ What every public repository in this portfolio documents, and in what form. The 
 
 A README that lists features without limitations is a sales page, not documentation. State what the tool does not do, including platform and architecture constraints, in the requirements section rather than leaving it to a badge.
 
+### The first screen
+
+Somebody arriving from a search result or a link decides in seconds whether to
+keep reading. They are not going to scroll past a feature list to find out
+whether the tool is for them. Everything above the fold answers three questions,
+in this order:
+
+**What is it for, in a sentence anyone can read.** Not what it is, what it does
+for the reader. "Lightweight modular Swift agent framework for local LLMs"
+names the parts; "lets a local model do things, not just answer" names the
+point. Category nouns like framework, toolkit and platform describe the shape of
+the thing and carry no information about its purpose.
+
+**Who it is not for.** The exclusion is worth more than the invitation, because
+it is the sentence that stops the wrong reader from spending ten minutes finding
+out. "If you only need a single answer, call the API directly" costs one line
+and saves that reader the whole page.
+
+**What using it looks like.** The shortest real example, immediately: a few
+lines of code, a screenshot, one command. Not after the features, before them.
+Whoever is still reading wants to see the thing, not a description of it.
+
+A feature list belongs underneath all three. It is a reference for somebody who
+has already decided, and it persuades nobody who has not.
+
+The test: cover everything below the first screenful and ask whether a stranger
+could say what the tool is for and whether they want it. If not, the opening is
+describing the parts instead of the point, however complete the rest of the
+document is.
+
 ## 2. API Documentation
 
 - Docstrings or comments on every public function
