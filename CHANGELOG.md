@@ -3,6 +3,15 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.0] - 2026-07-30
+
+### Added
+
+- `documentation.md` gains a section on the first screen of a README. Somebody arriving from a search result decides in seconds whether to keep reading, and a feature list does not help them decide. The section requires three things above the fold, in order: what the tool does for the reader in one plain sentence, who it is not for, and the shortest real example of using it. A feature list belongs underneath, because it is a reference for somebody who has already decided.
+- The section carries a test rather than a preference: cover everything below the first screenful and ask whether a stranger could say what the tool is for and whether they want it. Without that, the rule would be a matter of taste and would be argued about instead of applied.
+
+---
+
 ## [0.12.1] - 2026-07-30
 
 ### Changed
