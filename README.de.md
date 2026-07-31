@@ -2,7 +2,27 @@
 
 [🇬🇧 English Version](README.md)
 
-**Die einzige versionierte Quelle dafür, wie Software im RayStudio-Portfolio designt, abgesichert, gebaut und released wird.** Microsoft-fokussiert, Security-First, geschrieben für Senior Engineers und Architects.
+**Die Regeln, an denen sich jedes Repository dieses Portfolios tatsächlich messen lassen muss, aufgeschrieben, damit man sie prüfen kann.**
+
+Standards, die nur im Kopf existieren, driften. Jedes Repository hier folgt
+demselben Release-Prozess, derselben Security-Baseline und denselben
+Dokumentationsregeln, und hier stehen sie: geschrieben, versioniert und aus den
+Repositories heraus referenziert.
+
+Vierzehn Dokumente unter [`standards/`](standards/): Architektur, Security, der
+[Release-Prozess](standards/release-process.md), CI/CD, Observability,
+Coding-Regeln für Rust, Python und TypeScript,
+[Dokumentation](standards/documentation.md) und Schreibstil. Unter
+[`templates/`](templates/) liegt, was wiederholt gebraucht wird: ein ADR, eine
+Dependabot-Konfiguration, die Bootstrap-Checkliste für ein neues Repository.
+
+Microsoft-fokussiert, Security-First.
+
+**Nichts für dich, wenn** du einen allgemeinen Style Guide zum Übernehmen
+suchst. Das hier ist auf ein Portfolio, einen Maintainer und einen
+Microsoft-lastigen Stack zugeschnitten. Lies es der Begründungen wegen, wenn
+das hilft; wer es einfach kopiert, importiert Entscheidungen, die für eine
+andere Lage getroffen wurden als seine.
 
 ## Zweck, Umfang, Zielgruppe
 
