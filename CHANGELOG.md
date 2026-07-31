@@ -3,6 +3,15 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.15.0] - 2026-07-31
+
+### Added
+
+- `governance.md` gains section 9, an evidence standard for reported work. Most work here is done by AI agents and reported in prose, where a wrong claim reads exactly like a correct one, and the existing documents said nothing about what a claim has to carry. Seven rules: a claim about repository state carries the command that establishes it; error output is never suppressed; a finding in one repository is a hypothesis about the others until each is checked; delegated work is spot-checked rather than trusted; a hypothesis that fails is reported rather than dropped; a test counts as evidence only once it has been seen to fail; and every rule in these standards names how it is checked.
+- Each of those rules cites the specific failure that produced it, so none of them reads as a preference. They come from real incidents: six workflows reported as changed when one was, a ruleset update reported as successful because its 422 had been redirected to `/dev/null`, four applications assumed alike where one held the same code as dead weight, and two subagent reports of "no collisions" where collisions existed.
+
+---
+
 ## [0.14.1] - 2026-07-31
 
 ### Changed
