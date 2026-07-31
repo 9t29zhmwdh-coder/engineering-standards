@@ -76,6 +76,7 @@ Threat models are revisited whenever a new trust boundary, external integration,
 - Dependency vulnerability scanning (`npm audit`, `cargo audit`, `pip-audit`, `dotnet list package --vulnerable`, GitHub Dependabot alerts) runs on every pull request and on a scheduled cadence against `main`.
 - Lock files (`package-lock.json`, `Cargo.lock`, `requirements.txt`/`poetry.lock`) are committed and are the source of truth for reproducible builds.
 - A vulnerability with an available fix is patched within a risk-proportional window: critical within days, high within two weeks, medium/low on the next regular dependency update cycle.
+- A vulnerability with **no** available fix is not left as an open alert with no explanation. Establish and write down three things: which direct dependency pulls it in, whether an upgrade is possible at all from this position, and whether the vulnerable code path is reachable from this project. Record the result in the repository's `SECURITY.md` under a "Known unfixable advisories" heading, with the advisory ID and the condition that would end it. Re-check it whenever the blocking dependency releases a major version. An alert nobody can act on is still information a reader of a public repository is entitled to.
 
 ## 11. Audit Logging
 
