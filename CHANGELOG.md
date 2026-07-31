@@ -3,6 +3,14 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.14.0] - 2026-07-31
+
+### Added
+
+- `security.md` section 10 now covers the case it was missing: a vulnerability with no available fix. The existing rule only said what to do when a patch exists, which left six Tauri repositories carrying a permanently open Dependabot alert with nothing written down about it. The rule now requires establishing which direct dependency pulls the advisory in, whether an upgrade is possible at all, and whether the vulnerable path is reachable, then recording that in the repository's `SECURITY.md` with the condition that would end it.
+
+---
+
 ## [0.13.0] - 2026-07-30
 
 ### Added
