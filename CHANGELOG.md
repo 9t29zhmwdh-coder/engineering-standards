@@ -10,6 +10,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `documentation.md` gains a section on the first screen of a README. Somebody arriving from a search result decides in seconds whether to keep reading, and a feature list does not help them decide. The section requires three things above the fold, in order: what the tool does for the reader in one plain sentence, who it is not for, and the shortest real example of using it. A feature list belongs underneath, because it is a reference for somebody who has already decided.
 - The section carries a test rather than a preference: cover everything below the first screenful and ask whether a stranger could say what the tool is for and whether they want it. Without that, the rule would be a matter of taste and would be argued about instead of applied.
 
+### Changed
+
+- This repository's own READMEs now follow the rule they introduce. They opened by calling themselves the single versioned source of truth, which describes the document's standing rather than what a reader gets from it. They now say what is here, that standards kept in someone's head drift, and who should not adopt these wholesale: they are specific to one portfolio, one maintainer and a Microsoft-centred stack.
+
 ---
 
 ## [0.12.1] - 2026-07-30

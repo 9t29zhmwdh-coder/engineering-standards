@@ -2,7 +2,26 @@
 
 [🇩🇪 Deutsche Version](README.de.md)
 
-**The single versioned source of truth for how software is designed, secured, built, and released across the RayStudio portfolio.** Microsoft-focused, security-first, written for senior engineers and architects.
+**The rules every repository in this portfolio is actually held to, written down so they can be checked.**
+
+Standards that live in someone's head drift. Every repository here follows the
+same release process, the same security baseline and the same documentation
+rules, and this is where those are written, versioned, and referenced from the
+repositories themselves.
+
+Fourteen documents under [`standards/`](standards/): architecture, security,
+the [release process](standards/release-process.md), CI/CD, observability,
+per-language coding rules for Rust, Python and TypeScript,
+[documentation](standards/documentation.md) and writing style. Templates under
+[`templates/`](templates/) for the things done repeatedly: an ADR, a Dependabot
+config, the bootstrap checklist for a new repository.
+
+Microsoft-focused, security-first.
+
+**Not for you if** you are looking for a general style guide to adopt. These
+are specific to one portfolio, one maintainer and a Microsoft-centred stack.
+Read them for the reasoning if it helps; copying them wholesale will import
+decisions that were made for a different situation than yours.
 
 ## Purpose, Scope, Audience
 
