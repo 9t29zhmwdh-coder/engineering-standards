@@ -65,8 +65,16 @@ Classify before bumping: bug fix or documentation fix means patch, new functiona
 - [ ] Security checklist completed ([`../templates/security-checklist.md`](../templates/security-checklist.md))
 - [ ] Dependencies audited
 - [ ] Documentation updated
-- [ ] Code review done
+- [ ] The full diff read end to end by its author, with the reasoning for each change written into the pull request
+- [ ] Every required status check green on the pull request, not merely locally
 - [ ] Build artifacts tested
+
+> **Why not "code review approved":** this portfolio has one maintainer, and
+> `required_approving_review_count` is 0 by design, as section 1 explains. A box
+> that can only be ticked by pretending somebody else looked trains the habit of
+> ticking boxes. The two items above say what actually happens and can be
+> checked afterwards: the pull request either carries the reasoning or it does
+> not, and the checks are either green or they are not.
 
 ## 5. Rollback
 

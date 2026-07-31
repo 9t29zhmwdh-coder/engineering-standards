@@ -3,6 +3,14 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.14.1] - 2026-07-31
+
+### Changed
+
+- The pre-release checklist asked for "code review done". There is one maintainer and `required_approving_review_count` is 0 by design, so that box could only ever be ticked by pretending somebody else had looked, which trains the habit of ticking boxes rather than the habit of checking. It is replaced by two items that describe what actually happens and can be verified afterwards: the diff read end to end by its author with the reasoning recorded in the pull request, and every required status check green on the pull request rather than only locally. A short note states the reasoning, so the item does not quietly drift back.
+
+---
+
 ## [0.14.0] - 2026-07-31
 
 ### Added
