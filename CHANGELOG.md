@@ -3,6 +3,16 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.0] - 2026-08-05
+
+### Changed
+
+- `standards/release-process.md` section 2 now distinguishes repositories that have a `release.yml` from those that do not. The step said "create the GitHub release" and showed `gh release create` without qualification, and following that in a repository whose workflow already does it on tag push is a race. When the workflow loses, a successful build reports a red run; when it loses in a repository where the workflow is what attaches the binaries, the release goes out with nothing to download. Three did on 2026-08-04.
+- The section also records the repair that does not require deleting a published release: pull the artifacts from the failed run with `gh run download` and attach them with `gh release upload`, or start the workflow by hand for the tag when the artifacts were built inside the release job and are gone with the runner.
+- Section 3 step 5 carried the same ambiguity and now points at section 2.
+
+---
+
 ## [0.15.0] - 2026-07-31
 
 ### Added
