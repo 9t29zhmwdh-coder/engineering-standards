@@ -84,10 +84,16 @@ place.
       installer (Tauri bundler, PyInstaller, Inno Setup, `dotnet publish`);
       confirmed to actually attach build artifacts to a real tag push
       before relying on it (see Phase 4)
+- [ ] CodeQL workflow committed as `.github/workflows/codeql.yml`, copied
+      from `NetSweep` with only the language matrix changed
+      (`ci-cd.md` section 9.1). Do **not** enable the repository default
+      setup instead: it never runs on Dependabot pull requests, so the
+      `Analyze (<lang>)` contexts required by the ruleset are never
+      produced there and every dependency bump is blocked from merging.
+      Verify the default setup stays off with
+      `gh api repos/<owner>/<repo>/code-scanning/default-setup`
 - [ ] Pure repo-settings toggles enabled, no workflow file needed for
-      these three (`ci-cd.md` section 9): CodeQL default setup
-      (`gh api -X PATCH repos/<owner>/<repo>/code-scanning/default-setup
-      -f state=configured -f query_suite=default`); Dependabot security
+      these two (`ci-cd.md` section 9): Dependabot security
       updates (`security_and_analysis.dependabot_security_updates.status`
       via `gh api -X PATCH repos/<owner>/<repo>`); secret scanning and push
       protection (usually on by default for public repos, verify with

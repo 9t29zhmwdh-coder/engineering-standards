@@ -144,6 +144,8 @@ As of 2026-07-21, every public repository's `solo-main-protection` ruleset carri
 
 **Known caveat, rechecked 2026-07-30:** the generic `CodeQL` check name is unreliable on some repos, it reports `skipping` instead of `success` on a normal PR (observed on `EmissaryKit`, formerly SwiftAgent, on `NetSweep`, and on `ServiceLLM`, formerly CodeWhisper). The original note blamed a default-setup versus committed-workflow interaction. That explanation is wrong: all three now run a committed `codeql.yml` and the behaviour persists, while `MailLoom`, `BugRadar` and `LogLens` require the same check and it turns green on every PR. The cause is unidentified, so the rule below stays empirical rather than reasoned. `CodeQL` is required only on repos where it was directly confirmed to report `success` on a real PR; it is deliberately left out of the required set for the affected repos to avoid a required check that can never turn green. Revisit if GitHub's CodeQL default-setup behavior changes.
 
+**A separate, now-identified failure, 2026-08-14:** do not confuse the unresolved question above with the Dependabot case, which is understood and fixed. The generic `CodeQL` context misbehaving on *normal* pull requests is still unexplained. The `Analyze (<lang>)` contexts going missing on *Dependabot* pull requests is not: the default setup never runs on them at all, so the required contexts are never produced and the pull request is blocked permanently. That failure and its fix are section 9.1. It is also why section 9 now requires a committed workflow rather than the default setup, which removes the affected configuration from the portfolio entirely.
+
 ## 8. Caching and Performance
 
 - Dependency caches (`actions/cache`, `Swatinem/rust-cache`, npm/pip caches) are used on every pipeline to keep CI feedback fast; a slow CI pipeline is treated as a productivity defect worth fixing.
@@ -178,13 +180,12 @@ workflow file:
   require a paid GitHub Advanced Security license and are out of reach on
   an individual Pro plan; do not claim them as enabled without checking.
 - **CodeQL** (GitHub's static analysis security scanner, Microsoft-backed
-  research): enabled via
-  `gh api -X PATCH repos/<owner>/<repo>/code-scanning/default-setup
-  -f state=configured -f query_suite=default` for every supported
-  language. Finds real code-level vulnerabilities (injection, unsafe
-  deserialization, path traversal) that a dependency audit does not,
-  because a dependency audit only checks known-vulnerable *packages*, not
-  vulnerable code written in this repository.
+  research): enabled through a committed workflow, **not** through the
+  default setup, for the reason given in section 9.1 below. Finds real
+  code-level vulnerabilities (injection, unsafe deserialization, path
+  traversal) that a dependency audit does not, because a dependency audit
+  only checks known-vulnerable *packages*, not vulnerable code written in
+  this repository.
 - **OpenSSF Scorecard**: a scheduled workflow (`ossf/scorecard-action`)
   that scores the repository against supply-chain hygiene checks,
   including the exact thing Section 2 requires by hand (pinned actions),
@@ -217,6 +218,77 @@ None of these three replace Section 3's required stages; they are
 additional, low-effort signals layered on top, enabled once at repository
 creation (Phase 2 of
 [`../templates/new-repo-bootstrap-checklist.md`](../templates/new-repo-bootstrap-checklist.md)).
+
+### 9.1 CodeQL runs from a committed workflow, never from the default setup
+
+**Rule:** every repository with CodeQL runs it from `.github/workflows/codeql.yml`. The repository default setup is left at `not-configured`. The canonical pattern is `NetSweep/.github/workflows/codeql.yml`; copy that file and change only the language matrix.
+
+**Why, established 2026-08-14 on `CrowdGauge`:** GitHub's CodeQL default setup never runs on pull requests opened by Dependabot. This is a documented product limitation ([`github/codeql-action#2858`](https://github.com/github/codeql-action/issues/2858), [community discussion 121836](https://github.com/orgs/community/discussions/121836)), not a misconfiguration, and no amount of rebasing works around it. Since section 7 requires the `Analyze (<lang>)` contexts on the default branch, those contexts are never produced on a Dependabot branch and every Dependabot pull request is blocked from merging forever. The repository's own pull requests are unaffected, which is what makes this easy to miss until a dependency bump has sat open for days.
+
+The symptom is specific enough to recognise without re-diagnosing it: on the Dependabot head commit there is a single check run named `CodeQL` with conclusion `neutral` and the title `N configurations not found`, and the `Analyze (<lang>)` check runs are absent entirely rather than failing. Confirm with `gh api repos/<owner>/<repo>/actions/runs?branch=<dependabot-branch>`, which lists no CodeQL run at all.
+
+The pattern, with the parts that are load-bearing rather than stylistic:
+
+```yaml
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "27 4 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            runner: ubuntu-latest
+            build-mode: none
+          - language: csharp
+            runner: ubuntu-latest
+            build-mode: none
+    steps:
+      - uses: actions/checkout@<sha> # v7.0.1
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@<sha> # v4.37.6
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          queries: security-extended
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@<sha> # v4.37.6
+        with:
+          category: "/language:${{ matrix.language }}"
+```
+
+- `name: Analyze (${{ matrix.language }})` is written out explicitly so the check-run names match the `Analyze (<lang>)` contexts pinned in the `solo-main-protection` ruleset exactly. Do not rely on GitHub appending matrix values to a plain job name.
+- The job-level `permissions` block lists **only** `security-events: write`. It is what lets the analysis upload its results on a Dependabot pull request, where the token is otherwise read-only. Repeating `contents: read` or `actions: read` here is what OpenSSF Scorecard counts as excessive token permissions, so the grants that the workflow-level block already gives are not restated.
+- `queries: security-extended` rather than the default suite, portfolio-wide.
+- `runs-on: ${{ matrix.runner }}` because Swift analysis only runs on macOS; everything else is cheaper on Linux.
+- Languages are only those actually present in the repository. CodeQL has no PowerShell support, so a PowerShell repository analyses `actions` alone (`WorkplaceAssessment`, `RepoLedger`).
+
+**Migrating an existing repository off the default setup**, in this order, because the sequence matters:
+
+1. Check for open CodeQL alerts first with `gh api "repos/<owner>/<repo>/code-scanning/alerts?state=open"`; disabling the default setup discards them. Scorecard findings appear in the same list and are not CodeQL alerts.
+2. Commit the workflow with the same languages the default setup covered, readable from `gh api repos/<owner>/<repo>/code-scanning/default-setup`.
+3. Disable the default setup with `gh api -X PATCH repos/<owner>/<repo>/code-scanning/default-setup -f state=not-configured`. This must happen **before** the first advanced run, otherwise GitHub rejects the results with "analyses from advanced configurations cannot be processed when the default setup is enabled".
+4. Rebase the blocked Dependabot pull request (`@dependabot rebase`) so the workflow exists on its branch. Without this the branch still has no workflow and nothing changes.
+
+**Auditing the portfolio for this:** a repository is affected when the default setup reports `configured` **and** its ruleset pins `Analyze (<lang>)` contexts. Two traps produce false positives: `NetDashboard` has `master` as its default branch, so a query against `/rules/branches/main` returns an empty rule set there, and `engineering-standards` has no workflows and no required checks at all, so nothing can block. The full sweep on 2026-08-14 found `CrowdGauge` as the only affected repository out of 37; roughly 80 open Dependabot pull requests elsewhere were all `CLEAN`.
 
 ### README badge order
 

@@ -3,6 +3,20 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.0] - 2026-08-14
+
+### Added
+
+- New `standards/ci-cd.md` section 9.1: CodeQL runs from a committed `codeql.yml`, never from the repository default setup, with `NetSweep` named as the canonical pattern to copy. The default setup never runs on Dependabot pull requests, which is a documented GitHub limitation rather than a misconfiguration. Because section 7 requires the `Analyze (<lang>)` contexts, those contexts are never produced on a Dependabot branch and the pull request is blocked from merging forever, while the repository's own pull requests stay green and hide the problem. `CrowdGauge` had a dependency bump sitting open for six days for exactly this reason.
+- The section records what is load-bearing in the pattern rather than only showing it: the job name written out as `Analyze (${{ matrix.language }})` so the check runs match the ruleset contexts exactly, a job-level `permissions` block holding only `security-events: write` (both because that is what allows the upload on a Dependabot pull request, and because repeating read grants is what OpenSSF Scorecard counts as excessive token permissions), and `queries: security-extended`.
+- The migration sequence for a repository still on the default setup, ordered because the order matters: check for open alerts before disabling anything, commit the workflow, disable the default setup *before* the first advanced run or GitHub rejects the results, then rebase the blocked Dependabot pull request so the workflow exists on its branch.
+- How to audit the portfolio for the same condition, including the two traps that produce false positives: `NetDashboard` uses `master` as its default branch, so a query against `/rules/branches/main` reports an empty rule set there, and `engineering-standards` has no workflows and no required checks at all. The sweep on 2026-08-14 found `CrowdGauge` as the only affected repository out of 37.
+
+### Changed
+
+- The CodeQL entry in `standards/ci-cd.md` section 9 and the corresponding item in `templates/new-repo-bootstrap-checklist.md` Phase 2 both prescribed enabling the default setup via `gh api -X PATCH .../code-scanning/default-setup -f state=configured`. Following that instruction is what produced the blocked repository, so both now prescribe the committed workflow and say explicitly why the default setup is not an acceptable substitute. CodeQL is no longer listed among the pure repo-settings toggles that need no workflow file.
+- The known caveat in section 7 said the cause of missing CodeQL checks was unidentified. That remains true for the generic `CodeQL` context on normal pull requests, and the note now separates that still-open question from the Dependabot case, which is identified and fixed, so the two are not conflated on the next reading.
+
 ## [0.16.0] - 2026-08-05
 
 ### Changed
