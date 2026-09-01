@@ -41,7 +41,14 @@ Threat models are revisited whenever a new trust boundary, external integration,
 
 - No secret (password, API key, connection string, certificate private key) is ever committed to a repository, including in commit history, test fixtures, or example configuration.
 - Azure Key Vault holds all production secrets; applications read them via Managed Identity at runtime, not via secrets baked into configuration files or CI variables where avoidable.
-- Local development uses `.env` files that are `.gitignore`d, paired with a committed `.env.example` documenting the required keys without values.
+- Local development keeps non-secret configuration (hosts, ports, usernames, feature flags) in `.gitignore`d `.env` files, paired with a committed `.env.example` documenting the required keys without values. Secret values do not go into those files.
+- On the local workstation every secret (password, API key, token, SSH key passphrase) lives in the macOS login keychain as a `generic-password` entry. Files, scripts and documentation reference the service name and the retrieval command, never the value:
+  - Create the entry interactively so the value never reaches the shell history: `security add-generic-password -U -a "$USER" -s <service> -w`
+  - Consume it through command substitution inside the command that needs it, never through a variable that gets printed: `curl -H "X-API-KEY: $(security find-generic-password -s <service> -w)" ...`
+  - Never pass a secret as a command-line argument; process arguments are visible to any local process through `ps`.
+- A vault protects storage, not output. Any secret printed to a terminal ends up in shell history, CI logs and agent transcripts, which makes it disclosed regardless of where it is stored. When verifying a secret, compare length and a hash prefix instead of showing the value.
+- SSH private keys carry a passphrase that is stored in the keychain; `~/.ssh/config` sets `UseKeychain yes` and `AddKeysToAgent yes` so unattended jobs keep working under `BatchMode=yes`.
+- A secret that has been exposed in plaintext (logs, transcripts, a committed file) counts as disclosed and is rotated, not merely relocated to a vault.
 - Secret scanning (GitHub secret scanning / push protection, or an equivalent pre-commit hook) is enabled on every repository.
 
 ## 6. Personal and Third-Party Information

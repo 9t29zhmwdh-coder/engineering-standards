@@ -57,18 +57,6 @@ Before every release: copy `templates/security-checklist.md` and work through it
 
 Every public repo gets the ruleset `solo-main-protection` on the default branch at creation. Setup commands, template path, monthly auto-check and the portfolio-wide baseline (including the known CodeQL limitation) are in `standards/release-process.md` section 1.
 
-### Semantic Versioning (MAJOR.MINOR.PATCH)
-- **MAJOR:** Breaking changes (e.g. API breaking change)
-- **MINOR:** New features (backward compatible)
-- **PATCH:** Bug fixes only
-
-**Example:**
-```
-v1.0.0 -> v1.1.0 (new feature)
-v1.1.0 -> v1.1.1 (bug fix)
-v1.x.x -> v2.0.0 (breaking change)
-```
-
 ### Release process & rollback capability
 Step-by-step process, versioning discipline (every merged change is versioned, tag and release included) and rollback procedure are in `standards/release-process.md`.
 
@@ -76,37 +64,15 @@ Step-by-step process, versioning discipline (every merged change is versioned, t
 
 ## 4. TESTING STRATEGY
 
-### Test pyramid
-```
-      E2E (critical flows only)
-    Integration tests (APIs, DB)
-  Unit tests (business logic) <- MOST
-```
-
 ### Minimum standards
 - **Unit tests:** Business logic, utilities (should run <1s, no I/O)
 - **Integration tests:** APIs, database interactions (against a test DB)
 - **E2E tests:** ONLY for critical user flows (too slow for everything)
 - **Coverage target:** ~80% (not 100%, but also not <50%)
 
-### Before every commit
-```bash
-npm test          # or pytest, dotnet test
-npm run lint      # or black, eslint
-npm run build     # or python setup.py build
-```
-
-### What NOT to test
-- Trivial getters/setters
-- Framework-provided code
-- External APIs (mock them instead)
-
 ---
 
 ## 5. CODE QUALITY & ARCHITECTURE
-
-### SOLID principles (Microsoft standard)
-Standard SOLID principles, applied consistently.
 
 ### DRY, KISS, YAGNI
 - **DRY (Don't Repeat Yourself):** 3x copy = abstract, 2x = consider, 1x = ok
@@ -201,23 +167,7 @@ Before publishing a tool on GitHub: the full checklist (core features, security,
 
 ---
 
-## 11. LIVING STANDARDS (AUTO-UPDATES)
-
-This CLAUDE.md is **living** and is automatically checked monthly for:
-- New Microsoft security advisories
-- GitHub security alerts (dependency vulnerabilities)
-- OWASP Top 10 updates
-- Best practice changes
-
-**Automated process:**
-- A check runs monthly
-- If updates are needed: you receive a proposal with a diff
-- You approve or reject
-- CLAUDE.md is updated (only with your OK)
-
----
-
-## 12. AI TRANSPARENCY & POSITIONING
+## 11. AI TRANSPARENCY & POSITIONING
 
 **Principle:** Rafael positions himself as a modern AI-native engineer. AI usage is not hidden but backed by visible governance (this standards repo, rulesets, PR flow, CI, tests).
 
@@ -234,7 +184,6 @@ This CLAUDE.md is **living** and is automatically checked monthly for:
 
 ---
 
-**Version:** 2026-07-28
-**Last auto-check:** Never (checked monthly)
+**Version:** 2026-09-01
 **Applies to:** All portfolio projects, especially GitHub public repos
 **Microsoft focus:** M365, Azure, Windows (x86/ARM)

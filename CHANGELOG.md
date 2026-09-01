@@ -3,6 +3,21 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.18.0] - 2026-09-01
+
+### Added
+
+- `standards/security.md` section 5 now says where a secret lives on the local workstation, not only where it lives in production. Key Vault covered the deployed side and `.env` covered the rest, which left the developer machine as the one place with no rule at all. Every local secret belongs in the macOS login keychain as a `generic-password` entry, created interactively so the value never reaches shell history, and consumed through command substitution inside the command that needs it. `.env` files keep hosts, ports and feature flags; they stop holding values.
+- The section states the reason a vault alone is not enough: it protects storage, not output. A secret printed to a terminal lands in shell history, CI logs and agent transcripts, and is disclosed no matter where it came from. Verification therefore compares a length and a hash prefix instead of showing the value, and a secret that has appeared in plaintext anywhere counts as disclosed and gets rotated rather than relocated.
+- Two consequences that were previously learned the hard way: a secret passed as a command-line argument is readable by any local process through `ps`, and an SSH key whose passphrase sits in the keychain needs `UseKeychain yes` with `AddKeysToAgent yes` so unattended jobs keep working under `BatchMode=yes`.
+
+### Removed
+
+- `CLAUDE.md` section 11, "Living Standards (Auto-Updates)", which described a monthly review process. It duplicated `standards/governance.md` section 5, which already owns the policy lifecycle, and it was the weaker of the two copies: it described the process without governing anything, and its own footer recorded the last check as "Never" while several audits had in fact run. The AI transparency policy moves up from section 12 to section 11, and the five cross-references to it were updated.
+- The German footer named a Windows home directory containing the maintainer's name. A personal path does not belong in a public repository, and the English footer had already dropped it, so the two now agree.
+
+---
+
 ## [0.17.0] - 2026-08-14
 
 ### Added

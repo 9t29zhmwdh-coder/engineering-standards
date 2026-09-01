@@ -55,18 +55,6 @@ Vor jedem Release: `templates/security-checklist.md` kopieren und abarbeiten, ni
 
 Jedes Public Repo bekommt bei Erstellung das Ruleset `solo-main-protection` auf dem Default-Branch. Setup-Befehle, Template-Pfad, monatlicher Auto-Check und die Portfolio-weite Baseline (inkl. bekannter CodeQL-Einschränkung) siehe `standards/release-process.md` Abschnitt 1.
 
-### Semantic Versioning (MAJOR.MINOR.PATCH)
-- **MAJOR:** Breaking Changes (z.B. API Breaking Change)
-- **MINOR:** New Features (backward compatible)
-- **PATCH:** Bug Fixes nur
-
-**Example:**
-```
-v1.0.0 → v1.1.0 (new feature)
-v1.1.0 → v1.1.1 (bug fix)
-v1.x.x → v2.0.0 (breaking change)
-```
-
 ### Release Process & Rollback Capability
 Schritt-für-Schritt-Ablauf, Versionierungsdisziplin (jede gemergte Änderung wird versioniert, inklusive Tag und Release) und Rollback-Vorgehen siehe `standards/release-process.md`.
 
@@ -74,37 +62,15 @@ Schritt-für-Schritt-Ablauf, Versionierungsdisziplin (jede gemergte Änderung wi
 
 ## 4. TESTING STRATEGY
 
-### Test Pyramid
-```
-      E2E (Critical Flows Only)
-    Integration Tests (APIs, DB)
-  Unit Tests (Business Logic) ← MOST
-```
-
 ### Minimum Standards
 - **Unit Tests:** Business Logic, Utilities (sollten <1s laufen, kein I/O)
 - **Integration Tests:** APIs, Database Interactions (gegen Test DB)
 - **E2E Tests:** NUR für kritische User Flows (zu langsam für alles)
 - **Coverage Target:** ~80% (nicht 100%, aber auch nicht <50%)
 
-### Before Every Commit
-```bash
-npm test          # oder pytest, dotnet test
-npm run lint      # oder black, eslint
-npm run build     # oder python setup.py build
-```
-
-### What NOT to Test
-- Triviale Getter/Setter
-- Framework-provided Code
-- Externe APIs (mock stattdessen)
-
 ---
 
 ## 5. CODE QUALITY & ARCHITECTURE
-
-### SOLID Principles (Microsoft Standard)
-Standard SOLID-Prinzipien, konsequent durchsetzen.
 
 ### DRY, KISS, YAGNI
 - **DRY (Don't Repeat Yourself):** 3x Copy = abstrahieren, 2x = consider, 1x = ok
@@ -199,23 +165,7 @@ Bevor du ein Tool auf GitHub publishest: vollständige Checkliste (Core Features
 
 ---
 
-## 11. LIVING STANDARDS (AUTO-UPDATES)
-
-Diese CLAUDE.md ist **lebendig** und wird monatlich automatisch geprüft auf:
-- Neue Microsoft Security Advisories
-- GitHub Security Alerts (Dependency Vulnerabilities)
-- OWASP Top 10 Updates
-- Best Practices Changes
-
-**Automatischer Prozess:**
-- Monatlich läuft ein Check
-- Falls Updates nötig: Du erhältst einen Vorschlag mit Diff
-- Du genehmigst oder lehnst ab
-- CLAUDE.md wird aktualisiert (nur mit deinem OK)
-
----
-
-## 12. AI-TRANSPARENZ & POSITIONIERUNG
+## 11. AI-TRANSPARENZ & POSITIONIERUNG
 
 **Grundsatz:** Rafael positioniert sich als moderner AI-nativer Engineer. KI-Einsatz wird nicht versteckt, sondern durch sichtbare Governance untermauert (dieses Standards-Repo, Rulesets, PR-Flow, CI, Tests).
 
@@ -232,7 +182,6 @@ Diese CLAUDE.md ist **lebendig** und wird monatlich automatisch geprüft auf:
 
 ---
 
-**Version:** 2026-07-28  
-**Last Auto-Check:** Nie (wird monatlich geprüft)  
-**Gültig für:** Alle Portfolio-Projekte unter C:\Users\RafaelYilmaz, besonders für GitHub Public Repos  
+**Version:** 2026-09-01  
+**Gültig für:** Alle Portfolio-Projekte, besonders für GitHub Public Repos  
 **Microsoft Focus:** M365, Azure, Windows (x86/ARM)
