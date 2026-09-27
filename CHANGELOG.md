@@ -3,13 +3,26 @@
 All notable changes to engineering-standards will be documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.18.0] - 2026-09-01
+## [0.18.0] - 2026-09-27
 
 ### Added
 
+- `standards/release-process.md` section 4.1, a live test against the README before every release that changes behaviour. The review round of 2026-09-24 to 2026-09-26 found five published repositories with green CI whose headline feature did not work at all: an Execute button that never executed (CleanFlow), a log source that could never be added (BugRadar), drift detection that never detected drift (NetFathom), a live mode reading every cost as zero (azure-cost-forecasting-engine), a pipeline that had never run to the end (AdapterForge). The section says how: the artifact the user gets, a separate `HOME`, invented data, outcomes checked where they land, and untestable parts named in the pull request.
+- Tags are placed and verified before they are pushed (release step 3): the default branch comes from `gh repo view`, never from localized `git` output, which on a German system cost four tags placed on feature-branch commits.
+- `standards/security.md` section 3: a Content Security Policy for every desktop web view, no wildcard CORS on unauthenticated local APIs, no third-party calls the app does not need (bundled fonts instead of Google Fonts). Section 6: tests and live checks use invented data and a separate `HOME`, never the maintainer's own photos, mail or files, and side effects such as files in the system trash are undone.
+- `standards/coding-typescript.md` section 7, errors at the backend boundary: no unhandled rejections behind a button, IPC types mirror serde's naming exactly, asynchronously registered listeners cope with an event that arrives first. Fonts are bundled.
+- `standards/coding-rust.md`: wire-format tests for every type the frontend sends, a test that every registry name a fallback uses is registered, and embedded stores (sled, exclusive SQLite) opened once per process and shared.
+- `templates/security-checklist.md`: a section for web views and local APIs, and a check that the live test ran on invented data and left nothing behind.
 - `standards/security.md` section 5 now says where a secret lives on the local workstation, not only where it lives in production. Key Vault covered the deployed side and `.env` covered the rest, which left the developer machine as the one place with no rule at all. Every local secret belongs in the macOS login keychain as a `generic-password` entry, created interactively so the value never reaches shell history, and consumed through command substitution inside the command that needs it. `.env` files keep hosts, ports and feature flags; they stop holding values.
 - The section states the reason a vault alone is not enough: it protects storage, not output. A secret printed to a terminal lands in shell history, CI logs and agent transcripts, and is disclosed no matter where it came from. Verification therefore compares a length and a hash prefix instead of showing the value, and a secret that has appeared in plaintext anywhere counts as disclosed and gets rotated rather than relocated.
 - Two consequences that were previously learned the hard way: a secret passed as a command-line argument is readable by any local process through `ps`, and an SSH key whose passphrase sits in the keychain needs `UseKeychain yes` with `AddKeysToAgent yes` so unattended jobs keep working under `BatchMode=yes`.
+
+### Changed
+
+- `CLAUDE.md`: "never present changes without a diff" and "always show the diff before committing" contradicted the risk-based merge policy in section 7. The rule is now that every PR carries its reasoning, the author reads the whole diff, the human gets a plain-language summary, and the diff itself is shown for medium and high risk.
+- `CLAUDE.md`: the 20-line function limit is a guideline, not a hard rule; secrets name the macOS keychain for the workstation next to Key Vault for production; the AI marketing rule states that it holds even when the tool suggests a "Generated with" line.
+- `standards/coding-typescript.md`: frontends start in the system language with English as the fallback, instead of always starting in English. The hard-coded default ignored German systems in four apps.
+- `CLAUDE.md` and `CLAUDE.en.md` drop "Author Responsibility" and "Reviewer Expectations" from section 7; `standards/release-process.md` section 4 and `standards/governance.md` already own them.
 
 ### Removed
 

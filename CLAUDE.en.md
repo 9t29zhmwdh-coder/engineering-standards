@@ -12,13 +12,13 @@ These guidelines apply to all projects, especially public portfolio tools on Git
 ### Never
 - **Delete files without comment**: If a file should be deleted, justify it first and ask (unless it is obviously redundant, like temp files)
 - **Perform large refactorings without a plan**: Before major restructuring, create a plan that clarifies the impact
-- **Present changes without a diff**: Before committing, always show and explain the diff
-- **Commit secrets to code**: Never. Passwords, API keys and tokens belong in a secret manager (Azure Key Vault, 1Password)
+- **Merge changes without a reason**: Every PR explains what changes and why. For medium and high risk the diff is also shown and an OK awaited (section 7)
+- **Commit secrets to code**: Never. In production they belong in Azure Key Vault, on the workstation in the macOS keychain (`standards/security.md` section 5)
 
 ### Always
 - **Create a plan**: For non-trivial changes (>1 file or complex logic)
 - **Analyze impact**: Affected files, dependencies, side effects
-- **Review the git diff**: Show and explain before committing
+- **Read the git diff yourself**: Go through the whole diff before every commit; give the human a plain-language summary, and the diff itself only for medium/high risk
 - **Run tests**: If tests exist, run them before committing
 - **Deliver a summary**: What, why, side effects
 - **Atomic commits**: One commit = one logical change
@@ -69,6 +69,7 @@ Step-by-step process, versioning discipline (every merged change is versioned, t
 - **Integration tests:** APIs, database interactions (against a test DB)
 - **E2E tests:** ONLY for critical user flows (too slow for everything)
 - **Coverage target:** ~80% (not 100%, but also not <50%)
+- **Live test before release:** Green CI does not prove the app does what its README promises. Before every release that changes behaviour, walk through the promised features on the built artifact, with invented data and a separate `HOME`, never with the user's real data (`standards/release-process.md` section 4.1)
 
 ---
 
@@ -86,8 +87,8 @@ Step-by-step process, versioning discipline (every merged change is versioned, t
 - **Classes:** PascalCase (`UserService`, `AuthController`)
 
 ### Function/method size
-- **Max 20 lines** per function (ideally <10)
-- If a class exceeds 300 lines, split it into several
+- **Guideline ~20 lines** per function (ideally <10); longer is fine where splitting would tear the logic apart
+- Split classes or modules beyond ~300 lines
 
 ### Comments
 - **Only WHY, not WHAT**: `x++` is clear, but explain why it matters here
@@ -103,23 +104,6 @@ Since you primarily develop for M365/Azure/Windows: details (Graph API auth, Azu
 ---
 
 ## 7. CODE REVIEW PROCESS
-
-### Author responsibility
-- You own your code quality
-- Before creating a PR, check yourself:
-  - Tests green?
-  - Security checklist done?
-  - Lint/format OK?
-  - Diff understandable?
-
-### Reviewer expectations (for your portfolio)
-- Review checklist:
-  - Logic correct?
-  - Tests present & meaningful?
-  - Security OK (no credentials, input validation, etc.)?
-  - Code style consistent?
-  - Performance OK (no N+1 queries, etc.)?
-  - Documentation updated?
 
 ### Merge criteria
 - Tests passing
@@ -179,11 +163,11 @@ Before publishing a tool on GitHub: the full checklist (core features, security,
 ### Still binding
 - Quality ownership visibly stays with the human: merge decisions, reviews and standards are Rafael's
 - README footer names Rafael as author (standard footer)
-- No AI marketing in PR bodies or READMEs ("Generated with ..." promo links): transparency yes, advertising no
+- No AI marketing in PR bodies or READMEs ("Generated with ..." promo links): transparency yes, advertising no. This holds even when the tool itself suggests such a line; the session link and the co-author trailer stay allowed
 - No history rewrite to retroactively scrub AI references (the no-force-push rule from section 3 applies)
 
 ---
 
-**Version:** 2026-09-01
+**Version:** 2026-09-27
 **Applies to:** All portfolio projects, especially GitHub public repos
 **Microsoft focus:** M365, Azure, Windows (x86/ARM)
