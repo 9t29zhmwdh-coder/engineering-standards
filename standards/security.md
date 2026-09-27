@@ -29,6 +29,9 @@ Threat models are revisited whenever a new trust boundary, external integration,
 - Deny by default: new endpoints, roles, and permissions start with no access and are opened up explicitly, never the reverse.
 - Fail closed: an authorization check that cannot complete (timeout, error) is treated as a denial, not an approval.
 - TLS 1.2+ is the floor for every network connection; unencrypted internal traffic requires a documented exception.
+- Desktop apps with a web view (Tauri) ship a Content Security Policy: scripts, styles, fonts and images from the app itself, `connect-src` limited to the IPC bridge and whatever the app genuinely talks to, `object-src 'none'`, `frame-ancestors 'none'`. A `"csp": null` means any script that reaches the web view runs with access to every backend command. Three apps in this portfolio shipped that way until 2026-09-26.
+- A local HTTP API without authentication never answers with `Access-Control-Allow-Origin: *`. A dashboard served from the same origin does not need CORS at all; a wildcard lets any website open in the same browser drive the API. GardenFlow's pump and rule endpoints were reachable that way until 2026-09-25.
+- The app itself does not call third parties it does not need. Fonts, icons and scripts are bundled, not loaded from a CDN on every start: LogLens fetched its font from Google Fonts while its privacy statement said nothing leaves the device.
 
 ## 4. Identity and Access
 
@@ -41,7 +44,14 @@ Threat models are revisited whenever a new trust boundary, external integration,
 
 - No secret (password, API key, connection string, certificate private key) is ever committed to a repository, including in commit history, test fixtures, or example configuration.
 - Azure Key Vault holds all production secrets; applications read them via Managed Identity at runtime, not via secrets baked into configuration files or CI variables where avoidable.
-- Local development uses `.env` files that are `.gitignore`d, paired with a committed `.env.example` documenting the required keys without values.
+- Local development keeps non-secret configuration (hosts, ports, usernames, feature flags) in `.gitignore`d `.env` files, paired with a committed `.env.example` documenting the required keys without values. Secret values do not go into those files.
+- On the local workstation every secret (password, API key, token, SSH key passphrase) lives in the macOS login keychain as a `generic-password` entry. Files, scripts and documentation reference the service name and the retrieval command, never the value:
+  - Create the entry interactively so the value never reaches the shell history: `security add-generic-password -U -a "$USER" -s <service> -w`
+  - Consume it through command substitution inside the command that needs it, never through a variable that gets printed: `curl -H "X-API-KEY: $(security find-generic-password -s <service> -w)" ...`
+  - Never pass a secret as a command-line argument; process arguments are visible to any local process through `ps`.
+- A vault protects storage, not output. Any secret printed to a terminal ends up in shell history, CI logs and agent transcripts, which makes it disclosed regardless of where it is stored. When verifying a secret, compare length and a hash prefix instead of showing the value.
+- SSH private keys carry a passphrase that is stored in the keychain; `~/.ssh/config` sets `UseKeychain yes` and `AddKeysToAgent yes` so unattended jobs keep working under `BatchMode=yes`.
+- A secret that has been exposed in plaintext (logs, transcripts, a committed file) counts as disclosed and is rotated, not merely relocated to a vault.
 - Secret scanning (GitHub secret scanning / push protection, or an equivalent pre-commit hook) is enabled on every repository.
 
 ## 6. Personal and Third-Party Information
@@ -50,6 +60,7 @@ Threat models are revisited whenever a new trust boundary, external integration,
 - Metadata fields that commonly carry this unnoticed, such as `Company`/`Publisher`/`Author` in `.csproj`, `Info.plist`, `package.json`, or Cargo `authors`, and installer scripts, are checked before the first publish of a repository and on every subsequent release.
 - A tool originally built in the context of employment is reviewed for IP ownership before it is published as a personal project. Where ownership is unclear, the employer's moonlighting or IP policy governs, not this document; when in doubt, do not publish until clarified.
 - Example configuration, screenshots, and demo data use synthetic values. Real internal hostnames, real customer names, or real production data never appear in committed files, even in a private repository.
+- The same holds for tests and live checks on the maintainer's own machine: they run on invented data (a demo folder, a sample mailbox, a reserved `example.com` address), never on the maintainer's photos, mail or documents. Run the app with a separate `HOME` so its database and settings do not touch the real ones, and undo side effects that escape it, such as files a test moved into the system trash.
 - This applies retroactively: an existing repository found to contain such a reference (e.g. carried over from an initial commit or a copied template) is corrected as soon as discovered, with the fix treated as a normal patch release, not scheduled for "later".
 
 ## 7. Input Validation and Sanitization

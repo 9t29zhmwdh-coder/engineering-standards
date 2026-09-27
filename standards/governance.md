@@ -8,7 +8,7 @@ This is a solo-maintained portfolio. There is no second human reviewer, so gover
 
 - Technically enforced branch protection (see [`ci-cd.md`](ci-cd.md) section 6 and the [`ruleset-template.json`](../ruleset-template.json)) so no change, including by the owner, bypasses the PR flow.
 - A risk-based merge policy (below) that requires an explicit pause for anything that isn't low risk, so a second look happens even without a second person.
-- AI-assisted engineering is used deliberately and transparently rather than hidden; see [Section 12 of `CLAUDE.md`](../CLAUDE.md) for the AI transparency policy that governs this.
+- AI-assisted engineering is used deliberately and transparently rather than hidden; see [Section 11 of `CLAUDE.md`](../CLAUDE.md) for the AI transparency policy that governs this.
 
 ## 2. Risk-Based Merge Policy
 

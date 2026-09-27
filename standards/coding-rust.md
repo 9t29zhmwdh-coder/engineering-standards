@@ -42,9 +42,15 @@ Applies to every Rust crate in the portfolio (Tauri backends, CLI tools, shared 
 
 - Unit tests live alongside the code they test (`#[cfg(test)] mod tests` in the same file) for anything not requiring external I/O.
 - Integration tests that need a database run against a real, ephemeral SQLite/Postgres instance created in a test fixture, not against a shared, stateful test database.
+- Every type the frontend sends over IPC gets a test that deserializes the exact JSON the frontend produces. serde's `rename_all` changes the wire format without a compiler error on either side.
+- Registries, parser tables and similar lookups that a command path falls back on get a test that every name the code refers to is actually registered. An `unwrap()` on such a fallback turned "unknown parser" into a panic that killed the command silently.
 - `cargo test --workspace` is a required CI gate alongside `check` and `clippy`; a crate with zero tests is a tracked gap in that repository's `ROADMAP.md`, not a silent omission.
 
-## 8. Dead Code Discipline
+## 8. Embedded Databases and Single Handles
+
+- Embedded stores that lock their files (sled, SQLite in exclusive mode, RocksDB) are opened once per process and shared through `Clone`/`Arc`. Opening the same path again from a command handler fails with a lock error while the first handle lives; CleanFlow's execute and undo commands failed that way on every call.
+
+## 9. Dead Code Discipline
 
 - An unused `use` import, an unused function parameter, or a variable marked `mut` without ever being mutated are removed, not suppressed with `#[allow(unused)]`, unless there is a forward-looking reason documented in a comment.
 - A method that is defined but never called anywhere in the codebase is either wired up or removed; "dead but might be useful later" is a YAGNI violation, not a justification.

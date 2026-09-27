@@ -20,6 +20,12 @@ Per-release checklist implementing [`standards/security.md`](../standards/securi
 - [ ] All new database queries use parameterized queries/ORM binding, no string-concatenated SQL
 - [ ] All new output rendered into HTML/URL/shell contexts is properly encoded for that context
 
+## Web Views and Local APIs
+
+- [ ] A desktop app's web view ships a Content Security Policy, not `"csp": null` (or N/A: no web view)
+- [ ] No local API without authentication answers with a wildcard `Access-Control-Allow-Origin` (or N/A: {{reason}})
+- [ ] Fonts, icons and scripts are bundled; the app calls no third party it does not need
+
 ## Secrets Management
 
 - [ ] No secret present in the diff, including test fixtures and example configuration
@@ -32,6 +38,7 @@ Per-release checklist implementing [`standards/security.md`](../standards/securi
 - [ ] No real employer, client, or colleague name, hostname, or IP address anywhere in the diff, including metadata fields (`Company`/`Publisher`/`Author` in `.csproj`, `Info.plist`, `package.json`, Cargo `authors`, installer scripts)
 - [ ] Any example configuration, screenshot, or demo data added this release uses synthetic values, not real internal or production data
 - [ ] If this tool originated in the context of employment, IP ownership has been clarified before this release
+- [ ] The live test for this release ran on invented data with a separate `HOME`, and anything it left behind (files in the system trash, test accounts, installed tools) has been removed
 
 ## Encryption
 

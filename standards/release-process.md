@@ -95,7 +95,7 @@ Classify before bumping: bug fix or documentation fix means patch, new functiona
 
 1. Update the version in `package.json`/`setup.py`/`.csproj`/`Info.plist`/`pyproject.toml`
 2. Update `CHANGELOG.md` (format in [`documentation.md`](documentation.md))
-3. Create the release tag: `git tag v1.0.0`
+3. Create the release tag on the merged commit: fetch, check out the default branch as `gh repo view --json defaultBranchRef` reports it, and tag there. Before pushing, confirm the tag is the tip of the default branch (`git merge-base --is-ancestor <tag> origin/<default>` and the same SHA). Never derive the branch name from human-readable `git` output: on a German system `git remote show origin` says "Hauptbranch", a parser looking for "HEAD branch" gets nothing, and on 2026-09-25 four tags landed on feature-branch commits that way and started their release workflows before anyone noticed.
 4. Push the tag: `git push origin v1.0.0`
 5. Make sure the GitHub release exists, carrying the changelog entry as its notes. If the repository has a `release.yml` workflow, the tag push already did this and running `gh release create` on top of it is a race, see section 2
 6. Deploy to production where applicable
@@ -113,6 +113,7 @@ Classify before bumping: bug fix or documentation fix means patch, new functiona
 - [ ] The full diff read end to end by its author, with the reasoning for each change written into the pull request
 - [ ] Every required status check green on the pull request, not merely locally
 - [ ] Build artifacts tested
+- [ ] Every promise in the README checked against the running build (section 4.1)
 
 > **Why not "code review approved":** this portfolio has one maintainer, and
 > `required_approving_review_count` is 0 by design, as section 1 explains. A box
@@ -120,6 +121,17 @@ Classify before bumping: bug fix or documentation fix means patch, new functiona
 > ticking boxes. The two items above say what actually happens and can be
 > checked afterwards: the pull request either carries the reasoning or it does
 > not, and the checks are either green or they are not.
+
+### 4.1 Live test against the README
+
+Green CI proves that the code compiles and the tests pass. It does not prove the app does what its README says. The review round of 2026-09-24 to 2026-09-26 found, in repositories with green CI and published releases: an Execute button that never executed anything (CleanFlow), a log source that could never be added (BugRadar), a drift detector that never detected drift (NetFathom), a live mode that read every cost as zero (azure-cost-forecasting-engine), and a pipeline that had never run to the end (AdapterForge).
+
+Before a release that touches behaviour:
+
+1. Build the artifact the user gets, not only the test binary. For a Tauri app a debug bundle is enough (`npx @tauri-apps/cli build --debug --bundles app`), started with a separate `HOME`.
+2. Walk through every feature the README names, with invented data (see [`security.md`](security.md) section 6). Check the outcome where it lands, in the file system, the database or the other service, not only on screen.
+3. Watch for errors that go nowhere: an unhandled promise rejection, a panic in a command, a form that silently keeps its input. In a debug web view, "Inspect Element" opens the console.
+4. What cannot be checked here (a tenant, hardware, a paid API) is named in the pull request as untested, not left out.
 
 ## 5. Rollback
 

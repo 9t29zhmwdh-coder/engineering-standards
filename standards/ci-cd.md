@@ -193,7 +193,7 @@ workflow file:
   rule from something that has to be remembered into something checked on
   a schedule automatically, and the resulting badge is a public, verifiable
   signal of the repository's posture (relevant to this portfolio's
-  visible-governance positioning, `CLAUDE.md` section 12).
+  visible-governance positioning, `CLAUDE.md` section 11).
 - **Build provenance / artifact attestation** (`actions/attest`): for any
   repository that ships a packaged installer, the release job generates a
   signed attestation proving the artifact was built by this repository's

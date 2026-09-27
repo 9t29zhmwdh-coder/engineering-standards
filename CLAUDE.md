@@ -10,13 +10,13 @@ Diese Richtlinien gelten für alle Projekte, insbesondere für öffentliche Port
 ### Niemals
 - **Dateien kommentarlos löschen**: Wenn eine Datei gelöscht werden soll, begründe es zuerst und frage nach (es sei denn, es ist offensichtlich überflüssig wie temp-files)
 - **Grosse Refactorings ohne Plan durchführen**: Vor grösseren Umstrukturierungen wird zuerst ein Plan erstellt, der die Auswirkungen klärt
-- **Änderungen ohne Diff präsentieren**: Vor dem Commit wird der Diff immer gezeigt und erklärt
-- **Secrets in Code committen**: Nie. Passwords, API Keys, Tokens gehören in Secret Manager (Azure Key Vault, 1Password)
+- **Änderungen ohne Begründung mergen**: Jeder PR erklärt, was sich ändert und warum. Bei mittlerem und hohem Risiko wird der Diff zusätzlich gezeigt und auf ein OK gewartet (Abschnitt 7)
+- **Secrets in Code committen**: Nie. In Produktion gehören sie in Azure Key Vault, auf dem Arbeitsrechner in den macOS-Schlüsselbund (`standards/security.md` Abschnitt 5)
 
 ### Immer
 - **Plan erstellen**: Bei nicht-trivialen Änderungen (>1 Datei oder komplexe Logik)
 - **Auswirkungen analysieren**: Betroffene Dateien, Dependencies, Seiteneffekte
-- **Git-Diff kontrollieren**: Vor dem Commit zeigen und erklären
+- **Git-Diff selbst lesen**: Vor jedem Commit den ganzen Diff durchgehen; dem Menschen eine Zusammenfassung in Alltagssprache geben, den Diff selbst nur bei mittlerem/hohem Risiko
 - **Tests ausführen**: Falls Tests existieren, vor Commit laufen lassen
 - **Zusammenfassung liefern**: Was, Warum, Nebenwirkungen
 - **Atomic Commits**: Ein Commit = eine logische Änderung
@@ -55,18 +55,6 @@ Vor jedem Release: `templates/security-checklist.md` kopieren und abarbeiten, ni
 
 Jedes Public Repo bekommt bei Erstellung das Ruleset `solo-main-protection` auf dem Default-Branch. Setup-Befehle, Template-Pfad, monatlicher Auto-Check und die Portfolio-weite Baseline (inkl. bekannter CodeQL-Einschränkung) siehe `standards/release-process.md` Abschnitt 1.
 
-### Semantic Versioning (MAJOR.MINOR.PATCH)
-- **MAJOR:** Breaking Changes (z.B. API Breaking Change)
-- **MINOR:** New Features (backward compatible)
-- **PATCH:** Bug Fixes nur
-
-**Example:**
-```
-v1.0.0 → v1.1.0 (new feature)
-v1.1.0 → v1.1.1 (bug fix)
-v1.x.x → v2.0.0 (breaking change)
-```
-
 ### Release Process & Rollback Capability
 Schritt-für-Schritt-Ablauf, Versionierungsdisziplin (jede gemergte Änderung wird versioniert, inklusive Tag und Release) und Rollback-Vorgehen siehe `standards/release-process.md`.
 
@@ -74,37 +62,16 @@ Schritt-für-Schritt-Ablauf, Versionierungsdisziplin (jede gemergte Änderung wi
 
 ## 4. TESTING STRATEGY
 
-### Test Pyramid
-```
-      E2E (Critical Flows Only)
-    Integration Tests (APIs, DB)
-  Unit Tests (Business Logic) ← MOST
-```
-
 ### Minimum Standards
 - **Unit Tests:** Business Logic, Utilities (sollten <1s laufen, kein I/O)
 - **Integration Tests:** APIs, Database Interactions (gegen Test DB)
 - **E2E Tests:** NUR für kritische User Flows (zu langsam für alles)
 - **Coverage Target:** ~80% (nicht 100%, aber auch nicht <50%)
-
-### Before Every Commit
-```bash
-npm test          # oder pytest, dotnet test
-npm run lint      # oder black, eslint
-npm run build     # oder python setup.py build
-```
-
-### What NOT to Test
-- Triviale Getter/Setter
-- Framework-provided Code
-- Externe APIs (mock stattdessen)
+- **Live-Test vor dem Release:** Grüne CI beweist nicht, dass die App tut, was das README verspricht. Vor jedem Release mit Verhaltensänderung die versprochenen Funktionen am gebauten Artefakt durchspielen, mit erfundenen Daten und eigenem `HOME`, nie mit echten Daten des Nutzers (`standards/release-process.md` Abschnitt 4.1)
 
 ---
 
 ## 5. CODE QUALITY & ARCHITECTURE
-
-### SOLID Principles (Microsoft Standard)
-Standard SOLID-Prinzipien, konsequent durchsetzen.
 
 ### DRY, KISS, YAGNI
 - **DRY (Don't Repeat Yourself):** 3x Copy = abstrahieren, 2x = consider, 1x = ok
@@ -118,8 +85,8 @@ Standard SOLID-Prinzipien, konsequent durchsetzen.
 - **Classes:** PascalCase (`UserService`, `AuthController`)
 
 ### Function/Method Size
-- **Max 20 Zeilen** pro Funktion (ideal <10)
-- Wenn >300 Zeilen Klasse → split in mehrere
+- **Richtwert ~20 Zeilen** pro Funktion (ideal <10); länger ist erlaubt, wenn Aufteilen die Logik zerreissen würde
+- Klassen oder Module über ~300 Zeilen aufteilen
 
 ### Comments
 - **Nur WHY, nicht WHAT**: `x++` ist klar, aber warum es hier wichtig ist, erklären
@@ -135,23 +102,6 @@ Da du primär für M365/Azure/Windows entwickelst: Details (Graph API Auth, Azur
 ---
 
 ## 7. CODE REVIEW PROCESS
-
-### Author Responsibility
-- Du ownest dein Code Quality
-- Bevor du einen PR erstellen, selbst überprüfen:
-  - Tests grün?
-  - Security Checklist abgehakt?
-  - Lint/Format OK?
-  - Diff verständlich?
-
-### Reviewer Expectations (für dein Portfolio)
-- Review Checklist:
-  - Logic korrekt?
-  - Tests vorhanden & aussagekräftig?
-  - Security OK (keine Credentials, Input Validation, etc.)?
-  - Code Style Consistent?
-  - Performance OK (keine N+1 Queries, etc.)?
-  - Documentation updated?
 
 ### Merge Criteria
 - Tests passing
@@ -199,23 +149,7 @@ Bevor du ein Tool auf GitHub publishest: vollständige Checkliste (Core Features
 
 ---
 
-## 11. LIVING STANDARDS (AUTO-UPDATES)
-
-Diese CLAUDE.md ist **lebendig** und wird monatlich automatisch geprüft auf:
-- Neue Microsoft Security Advisories
-- GitHub Security Alerts (Dependency Vulnerabilities)
-- OWASP Top 10 Updates
-- Best Practices Changes
-
-**Automatischer Prozess:**
-- Monatlich läuft ein Check
-- Falls Updates nötig: Du erhältst einen Vorschlag mit Diff
-- Du genehmigst oder lehnst ab
-- CLAUDE.md wird aktualisiert (nur mit deinem OK)
-
----
-
-## 12. AI-TRANSPARENZ & POSITIONIERUNG
+## 11. AI-TRANSPARENZ & POSITIONIERUNG
 
 **Grundsatz:** Rafael positioniert sich als moderner AI-nativer Engineer. KI-Einsatz wird nicht versteckt, sondern durch sichtbare Governance untermauert (dieses Standards-Repo, Rulesets, PR-Flow, CI, Tests).
 
@@ -227,12 +161,11 @@ Diese CLAUDE.md ist **lebendig** und wird monatlich automatisch geprüft auf:
 ### Weiterhin verbindlich
 - Qualitätsverantwortung liegt sichtbar beim Menschen: Merge-Entscheidungen, Reviews und Standards trägt Rafael
 - README-Footer nennt Rafael als Author (Standard-Footer)
-- Kein KI-Marketing in PR-Bodies oder READMEs ("Generated with ..."-Werbelinks): Transparenz ja, Werbung nein
+- Kein KI-Marketing in PR-Bodies oder READMEs ("Generated with ..."-Werbelinks): Transparenz ja, Werbung nein. Das gilt auch, wenn das Werkzeug selbst eine solche Zeile vorschlägt; der Session-Link und der Co-Author-Trailer bleiben erlaubt
 - Kein History-Rewrite zur nachträglichen Bereinigung von KI-Referenzen (No-Force-Push-Regel aus Abschnitt 3 gilt)
 
 ---
 
-**Version:** 2026-07-28  
-**Last Auto-Check:** Nie (wird monatlich geprüft)  
-**Gültig für:** Alle Portfolio-Projekte unter C:\Users\RafaelYilmaz, besonders für GitHub Public Repos  
+**Version:** 2026-09-27  
+**Gültig für:** Alle Portfolio-Projekte, besonders für GitHub Public Repos  
 **Microsoft Focus:** M365, Azure, Windows (x86/ARM)
